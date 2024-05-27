@@ -1,0 +1,42 @@
+{
+  "name": "@oviirup/sprite",
+  "version": "0.0.0",
+  "displayName": "sprite",
+  "description": "Create svg sprite from svg files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oviirup/sprite"
+  },
+  "author": "Avirup Ghosh (https://github.com/oviirup)",
+  "license": "MIT",
+  "bin": {
+    "sprite": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "keywords": [
+    "svg-sprite",
+    "cli"
+  ],
+  "scripts": {
+    "build": "tsup ./src/index.js --minify --format cjs,esm",
+    "prepack": "husky",
+    "start": "node src/cli.js"
+  },
+  "dependencies": {
+    "commander": "^12",
+    "cosmiconfig": "^9.0.0",
+    "node-html-parser": "^6.1.13",
+    "picocolors": "^1",
+    "svgo": "^3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "husky": "^9",
+    "lint-staged": "^15",
+    "prettier": "^3",
+    "prettier-plugin-imports": "^4.2.9",
+    "prettier-plugin-jsdoc": "^1",
+    "prettier-plugin-pkg": "^0",
+    "tsup": "^8.0.2"
+  }
+}

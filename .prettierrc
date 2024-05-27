@@ -1,0 +1,10 @@
+{
+  "printWidth": 80,
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "arrowParens": "always",
+  "plugins": ["prettier-plugin-imports","prettier-plugin-jsdoc", "prettier-plugin-pkg"],
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "semi": true
+}
