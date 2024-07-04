@@ -1,18 +1,11 @@
 import { description, displayName, version } from '../package.json';
+import { SpriteConfig } from './types';
 
 export const CLI = { name: displayName, version, description };
 
-/**
- * Default options for sprite generator
- *
- * @type {Required<SpriteOptions>}
- */
-export const DEFAULT_OPTIONS = {
-  cwd: './',
+/** Default options for sprite generator */
+export const DEFAULT_OPTIONS: SpriteConfig = {
+  cwd: process.cwd(),
   input: './public/.icons',
   output: './public/sprite.svg',
-  dts: null,
-  extract: false,
-  prefix: '',
-  emit: true,
 };
