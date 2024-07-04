@@ -1,10 +1,14 @@
 {
-  "printWidth": 80,
-  "singleQuote": true,
-  "quoteProps": "consistent",
+  "$schema": "https://json.schemastore.org/prettierrc.json",
   "arrowParens": "always",
-  "plugins": ["prettier-plugin-imports","prettier-plugin-jsdoc", "prettier-plugin-pkg"],
-  "tabWidth": 2,
-  "trailingComma": "all",
-  "semi": true
+  "plugins": [
+    "prettier-plugin-imports",
+    "prettier-plugin-jsdoc",
+    "prettier-plugin-pkg"
+  ],
+  "printWidth": 80,
+  "quoteProps": "consistent",
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all"
 }
