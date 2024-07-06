@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "displayName": "sprite",
   "description": "Create svg sprite from svg files",
@@ -10,17 +10,17 @@
   },
   "author": "Avirup Ghosh (https://github.com/oviirup)",
   "license": "MIT",
-  "bin": "./dist/bin.cjs",
-  "main": "./dist/index.cjs",
+  "bin": "./dist/bin.js",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     },
     "./bin": {
-      "require": "./dist/bin.cjs"
+      "require": "./dist/bin.js"
     }
   },
   "keywords": [

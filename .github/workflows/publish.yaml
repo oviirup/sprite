@@ -22,14 +22,16 @@ jobs:
           version: 9.4.0
           run_install: false
 
-      - name: ⚙️ Install packages
-        run: pnpm install
+      - name: ⚙️ Install packages & Build
+        run: |
+          pnpm install
+          pnpm build
 
       - name: 🚀 Create Pull Request & Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run build
+          publish: pnpm publish -r
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
