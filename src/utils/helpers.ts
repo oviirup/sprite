@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import pi from 'picocolors';
+import { CLI } from '../const';
 import { IconData } from '../types';
 import { composeFileName, readFile } from './files';
 
@@ -34,7 +36,7 @@ export function getIconName(fileName: string) {
 
 export function outputFileNames(outputPath: string) {
   const sprite = composeFileName(outputPath, { ext: '.svg' });
-  const meta = composeFileName(outputPath, { suffix: '.meta', ext: '.json' });
+  const meta = composeFileName(outputPath, { ext: '.json' });
 
   return { sprite, meta };
 }
@@ -48,4 +50,13 @@ export function getHash(content: string, length = 6) {
   const hash = createHash('md5').update(content).digest('hex');
   const base36Hash = BigInt('0x' + hash).toString(36);
   return base36Hash.substring(0, length);
+}
+
+export function logger(msg: string, begin?: number) {
+  const identifier = pi.dim(`[${CLI.name.toUpperCase()}]`);
+  const time = begin ? `in ${(performance.now() - begin).toFixed(2)}ms` : '';
+  // removes all reference of working directory
+  const message = msg.replaceAll(process.cwd(), '');
+
+  console.log(identifier, message, pi.dim(time));
 }

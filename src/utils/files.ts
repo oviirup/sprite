@@ -48,6 +48,11 @@ export async function writeFile(
   return true;
 }
 
+/** Returns relative path of given file path */
+export function relativePath(filePath: string, cwd = process.cwd()) {
+  return path.relative(cwd, filePath).replace(/\\/g, '/');
+}
+
 type FileNameOverride = { prefix: string; suffix: string; ext: string };
 /** Compose a new filename with suffix, prefix, and extension */
 export function composeFileName(

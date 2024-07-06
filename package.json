@@ -1,7 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.0.2",
-  "type": "module",
+  "version": "0.0.3",
   "displayName": "sprite",
   "description": "Create svg sprite from svg files",
   "repository": {
@@ -12,15 +11,15 @@
   "license": "MIT",
   "bin": "./dist/bin.js",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     },
     "./bin": {
-      "require": "./dist/bin.js"
+      "require": "./dist/bin.js",
+      "import": "./dist/bin.mjs"
     }
   },
   "keywords": [
@@ -44,7 +43,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
     "@types/node": "^20",
-    "bunchee": "^5.2.1",
+    "bunchee": "^5",
     "husky": "^9",
     "lint-staged": "^15",
     "prettier": "^3",

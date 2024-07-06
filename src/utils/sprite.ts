@@ -4,8 +4,8 @@ import * as pi from 'picocolors';
 import * as svgo from 'svgo';
 import { PresetDefaultOverrides } from 'svgo/plugins/plugins-types';
 import { IconData } from '../types';
-import { composeFileName, writeFile } from './files';
-import { getByteSize, getHash, outputFileNames } from './helpers';
+import { composeFileName, relativePath, writeFile } from './files';
+import { getByteSize, getHash, logger, outputFileNames } from './helpers';
 
 type SymbolProps = { name: string; content: string };
 export function convertToSymbol({ name, content }: SymbolProps) {
@@ -39,11 +39,13 @@ type SpriteFileProps = {
   svgIcons: IconData[];
   outputPath: string;
   cwd: string;
+  timer?: number;
 };
 export async function createSpriteFiles({
   svgIcons,
   outputPath,
   cwd,
+  timer,
 }: SpriteFileProps) {
   const files = outputFileNames(outputPath);
 
@@ -56,18 +58,28 @@ export async function createSpriteFiles({
     ...symbols,
     `</svg>`,
   ].join('\n');
-  await writeFile(files.sprite, spriteContent).then((res) => {
-    if (!res) return;
-    const relativePath = path.relative(cwd, files.sprite);
-    console.log(pi.green('✓'), pi.dim('sprite:'), relativePath);
-  });
+  try {
+    await writeFile(files.sprite, spriteContent).then((res) => {
+      if (!res) return;
+      const _path = relativePath(files.sprite, cwd);
+      logger(`${pi.green('spite')}: ${_path}`, timer);
+    });
+  } catch {
+    return { error: `unable to write file ${files.sprite}` };
+  }
 
   // sprite metadata
   const metadata = Object.fromEntries(svgIcons.map((e) => [e.name, 0]));
   const metaContent = JSON.stringify(metadata);
-  await writeFile(files.meta, metaContent).then((res) => {
-    if (!res) return;
-    const relativePath = path.relative(cwd, files.meta);
-    console.log(pi.green('✓'), pi.dim('meta:  '), relativePath);
-  });
+  try {
+    await writeFile(files.meta, metaContent).then((res) => {
+      if (!res) return;
+      const _path = relativePath(files.meta, cwd);
+      logger(`${pi.green('meta')}:  ${_path}`);
+    });
+  } catch {
+    return { error: `unable to write file ${files.meta}` };
+  }
+
+  return { outputFiles: files };
 }

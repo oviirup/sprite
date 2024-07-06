@@ -33,7 +33,9 @@ SpriteCLI.command('build')
   .option('-p, --prefix <string>', text('Prefix for icon names'))
   .option('-w, --watch', text('Enable watch mode, monitor the input directory', 'false'))
   .option('-c, --clear', text('Clear out output files', 'true'))
-  .action(build);
+  .action(async (args) => {
+    await build(args).catch(() => process.exit(1));
+  });
 
 // prettier-ignore
 SpriteCLI.command('extract')

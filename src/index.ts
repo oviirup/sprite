@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import * as pi from 'picocolors';
+import pi from 'picocolors';
 import { SpriteConfig } from './types';
 import { resolveConfig } from './utils/config';
-import { getSvgIcons, outputFileNames } from './utils/helpers';
+import { relativePath } from './utils/files';
+import { getSvgIcons, logger, outputFileNames } from './utils/helpers';
 import { createSpriteFiles } from './utils/sprite';
 
 export async function build(opts: SpriteConfig) {
@@ -12,15 +13,17 @@ export async function build(opts: SpriteConfig) {
   const outputPath = config.output;
   const cwd = config.cwd;
 
-  const relativeInputPath = path
-    .relative(config.cwd, inputPath)
-    .replace(/\\/g, '/');
+  // start performance counter
+  const timer = performance.now();
+
+  const relativeInputPath = relativePath(inputPath);
 
   // exit build if input path does not exists
   if (!fs.existsSync(inputPath)) {
-    console.log(pi.red(`${relativeInputPath} does not exists`));
-    console.log(`Make sure you've entered the correct input path\n`);
-    process.exit(1);
+    let _error = `${relativeInputPath} does not exists`;
+    logger(pi.red(_error));
+    logger(pi.dim(`Make sure you've entered the correct input path\n`));
+    return { error: _error };
   }
 
   // get all svg files form input directory
@@ -31,9 +34,10 @@ export async function build(opts: SpriteConfig) {
 
   // throw error if no icon files found
   if (svgFilePaths.length === 0) {
-    console.log(pi.red(`No SVG files found in ${relativeInputPath}`));
-    console.log(`Make sure to keep all svg icons in mentioned path\n`);
-    process.exit(1);
+    let _error = `No SVG files found in ${relativeInputPath}`;
+    logger(pi.red(_error));
+    logger(`Make sure to keep all svg icons in mentioned path\n`);
+    return { error: _error };
   }
 
   if (config.clear) {
@@ -51,7 +55,9 @@ export async function build(opts: SpriteConfig) {
   // get svg icons and convert to symbols
   const svgIcons = await getSvgIcons(svgFilePaths);
   // create sprite files
-  await createSpriteFiles({ svgIcons, outputPath, cwd });
+  const result = await createSpriteFiles({ svgIcons, outputPath, cwd, timer });
+
+  return result;
 }
 
 export async function extract(opts: SpriteConfig) {
