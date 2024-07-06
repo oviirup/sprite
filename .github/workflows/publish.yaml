@@ -1,0 +1,35 @@
+name: Publish CLI Tool
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 🟡 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.4.0
+          run_install: false
+
+      - name: ⚙️ Install packages
+        run: pnpm install
+
+      - name: 🚀 Create Pull Request & Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
