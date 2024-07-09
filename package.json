@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "displayName": "sprite",
   "description": "Create svg sprite from svg files",
   "repository": {
@@ -52,6 +52,10 @@
     "prettier-plugin-pkg": "^0.18",
     "tsx": "^4",
     "typescript": "^5"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "lint-staged": {
     "*": "prettier -w -u"

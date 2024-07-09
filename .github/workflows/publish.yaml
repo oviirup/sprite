@@ -31,7 +31,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm publish -r --access=public
+          publish: pnpm publish -r
           commit: '✅ chore: update version'
           title: '✅ chore: update version'
         env:

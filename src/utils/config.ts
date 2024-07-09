@@ -25,6 +25,8 @@ export async function resolveConfig(
   config.clear ??= false;
   config.input = path.resolve(config.cwd, config.input);
   config.output = path.resolve(config.cwd, config.output);
+  config.prefix ??= '';
+  config.svgoPlugins ??= [];
 
   return config;
 }

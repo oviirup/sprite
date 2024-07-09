@@ -12,6 +12,7 @@ export async function build(opts: SpriteConfig) {
   const inputPath = config.input;
   const outputPath = config.output;
   const cwd = config.cwd;
+  const plugins = config.svgoPlugins;
 
   // start performance counter
   const timer = performance.now();
@@ -55,7 +56,7 @@ export async function build(opts: SpriteConfig) {
   // get svg icons and convert to symbols
   const svgIcons = await getSvgIcons(svgFilePaths);
   // create sprite files
-  const result = await createSpriteFiles({ svgIcons, outputPath, cwd, timer });
+  const result = await createSpriteFiles({ svgIcons, config, timer });
 
   return result;
 }
