@@ -1,23 +1,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import pi from 'picocolors';
-import { SpriteConfig } from './types';
+import { ResolvedConfig, SpriteConfig } from './types';
 import { resolveConfig } from './utils/config';
 import { relativePath } from './utils/files';
 import { getSvgIcons, logger, outputFileNames } from './utils/helpers';
 import { createSpriteFiles } from './utils/sprite';
 
-export async function build(opts: SpriteConfig) {
+export type { SpriteConfig, ResolvedConfig };
+
+export async function build(opts: SpriteConfig, rebuild?: boolean) {
   const config = await resolveConfig(opts);
   const inputPath = config.input;
   const outputPath = config.output;
   const cwd = config.cwd;
-  const plugins = config.svgoPlugins;
 
   // start performance counter
   const timer = performance.now();
 
-  const relativeInputPath = relativePath(inputPath);
+  const relativeInputPath = relativePath(inputPath, cwd);
 
   // exit build if input path does not exists
   if (!fs.existsSync(inputPath)) {
@@ -49,16 +50,33 @@ export async function build(opts: SpriteConfig) {
     });
   }
 
-  if (opts.watch) {
-    // TODO: work on watch mode
-  }
-
   // get svg icons and convert to symbols
   const svgIcons = await getSvgIcons(svgFilePaths);
   // create sprite files
-  const result = await createSpriteFiles({ svgIcons, config, timer });
+  createSpriteFiles({ svgIcons, config, timer });
+  // watch for changes
+  config.watch && watch(config);
+}
 
-  return result;
+async function watch(config: ResolvedConfig) {
+  const { watch } = await import('chokidar');
+  const cwd = config.cwd;
+  const inputPath = config.input;
+
+  logger(`watching for changes in ${relativePath(inputPath, cwd)} `);
+
+  const watcher = watch(inputPath, {
+    cwd,
+    ignoreInitial: true, // ignore initial scan
+    awaitWriteFinish: { stabilityThreshold: 50, pollInterval: 10 },
+  }).on('all', (event, fileName) => {
+    if (event === 'addDir' || event === 'unlinkDir') return; // ignore dir changes
+    if (fileName == null) return;
+    const begin = performance.now();
+    watcher.close();
+    build(config);
+    logger(`Rebuild finished`, begin);
+  });
 }
 
 export async function extract(opts: SpriteConfig) {
