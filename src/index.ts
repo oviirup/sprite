@@ -44,7 +44,7 @@ export async function build(opts: SpriteConfig, rebuild?: boolean) {
 
   if (config.clear) {
     // clear out previous builds
-    const files = outputFileNames(outputPath);
+    const files = outputFileNames(outputPath, config.outputFileSuffix);
     Object.values(files).forEach((file) => {
       if (fs.existsSync(file)) fs.rmSync(file);
     });
@@ -80,6 +80,6 @@ async function watch(config: ResolvedConfig) {
 }
 
 export async function extract(opts: SpriteConfig) {
-  const config = await resolveConfig(opts, { watch: false, clear: false });
+  const config = await resolveConfig({ ...opts, watch: false, clear: false });
   console.log(config);
 }

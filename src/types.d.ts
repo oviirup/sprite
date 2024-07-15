@@ -5,6 +5,11 @@ export type SpriteConfig = {
   input?: string;
   output?: string;
   prefix?: string;
+  /** Specify the suffix for output files */
+  outputFileSuffix?: {
+    sprite?: string;
+    meta?: string;
+  };
   /** Clear out output files */
   clear?: boolean;
   /** Enable watch mode */
@@ -18,7 +23,13 @@ export type SpriteConfig = {
   svgoPlugins?: PluginConfig[];
 };
 
-export type ResolvedConfig = Required<SpriteConfig>;
+type Predefined<T> = Required<{
+  [P in keyof T]: T[P] extends object | undefined
+    ? Predefined<Required<T[P]>>
+    : T[P];
+}>;
+
+export type ResolvedConfig = Predefined<SpriteConfig>;
 
 export type IconData = {
   name: string;

@@ -1,6 +1,6 @@
 import { parse } from 'node-html-parser';
-import * as pi from 'picocolors';
-import * as svgo from 'svgo';
+import pi from 'picocolors';
+import svgo from 'svgo';
 import { PresetDefaultOverrides } from 'svgo/plugins/plugins-types';
 import { IconData, ResolvedConfig } from '../types';
 import { relativePath, writeFile } from './files';
@@ -51,7 +51,7 @@ export async function createSpriteFiles({
   timer,
 }: SpriteFileProps) {
   const { prefix = '', output, cwd } = config;
-  const files = outputFileNames(output);
+  const files = outputFileNames(output, config.outputFileSuffix);
 
   // svg icons with prefixed id
   const icons = svgIcons.map((e) => ({ ...e, name: prefix + e.name }));
@@ -72,9 +72,10 @@ export async function createSpriteFiles({
       logger(`${pi.green('spite')}: ${_path}`, timer);
     });
   } catch {
-    return { error: `unable to write file ${files.sprite}` };
+    logger(pi.red(`unable to write file ${files.sprite}`));
   }
-
+  // reset timer
+  timer = performance.now();
   // sprite metadata
   const metadata = Object.fromEntries(icons.map((e) => [e.name, 0]));
   const metaContent = JSON.stringify(metadata);
@@ -82,10 +83,10 @@ export async function createSpriteFiles({
     await writeFile(files.meta, metaContent).then((res) => {
       if (!res) return;
       const _path = relativePath(files.meta, cwd);
-      logger(`${pi.green('meta')}:  ${_path}`);
+      logger(`${pi.green('meta')}:  ${_path}`, timer);
     });
   } catch {
-    return { error: `unable to write file ${files.meta}` };
+    logger(pi.red(`unable to write file ${files.meta}`));
   }
 
   return { outputFiles: files };

@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import pi from 'picocolors';
 import { CLI } from '../const';
-import { IconData } from '../types';
+import { IconData, ResolvedConfig, SpriteConfig } from '../types';
 import { composeFileName, readFile } from './files';
 
 export async function getSvgIcons(filePaths: string[]) {
@@ -34,9 +34,18 @@ export function getIconName(fileName: string) {
     .toLowerCase();
 }
 
-export function outputFileNames(outputPath: string) {
-  const sprite = composeFileName(outputPath, { ext: '.svg' });
-  const meta = composeFileName(outputPath, { ext: '.json' });
+export function outputFileNames(
+  outputPath: string,
+  suffix: ResolvedConfig['outputFileSuffix'],
+) {
+  const sprite = composeFileName(outputPath, {
+    ext: '.svg',
+    suffix: suffix.sprite,
+  });
+  const meta = composeFileName(outputPath, {
+    ext: '.json',
+    suffix: suffix.meta,
+  });
 
   return { sprite, meta };
 }

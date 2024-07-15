@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import * as pi from 'picocolors';
+import pi from 'picocolors';
 import { CLI } from './const';
 import { build, extract } from './index';
 
