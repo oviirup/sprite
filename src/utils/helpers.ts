@@ -2,9 +2,10 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import pi from 'picocolors';
 import { CLI } from '../const';
-import { IconData, ResolvedConfig, SpriteConfig } from '../types';
+import { IconData, ResolvedConfig } from '../types';
 import { composeFileName, readFile } from './files';
 
+/** Read svg file content for icons */
 export async function getSvgIcons(filePaths: string[]) {
   const icons: IconData[] = [];
   // read icon files and create an array
@@ -23,6 +24,7 @@ export async function getSvgIcons(filePaths: string[]) {
   return sortedIcons;
 }
 
+/** Normalized icon name */
 export function getIconName(fileName: string) {
   const basename = path.basename(fileName).trim();
   return basename
@@ -34,20 +36,15 @@ export function getIconName(fileName: string) {
     .toLowerCase();
 }
 
+/** Gets the output file name with suffix and extension */
 export function outputFileNames(
   outputPath: string,
-  suffix: ResolvedConfig['outputFileSuffix'],
+  suffix: ResolvedConfig['outFileSuffix'],
 ) {
-  const sprite = composeFileName(outputPath, {
-    ext: '.svg',
-    suffix: suffix.sprite,
-  });
-  const meta = composeFileName(outputPath, {
-    ext: '.json',
-    suffix: suffix.meta,
-  });
-
-  return { sprite, meta };
+  return {
+    sprite: composeFileName(outputPath, { ext: '.svg', suffix: suffix.sprite }),
+    meta: composeFileName(outputPath, { ext: '.json', suffix: suffix.meta }),
+  };
 }
 
 export function getByteSize(content: string) {

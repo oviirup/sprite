@@ -5,6 +5,7 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "paths": { "@/*": ["./src/*"] },
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import pi from 'picocolors';
+import { build } from './commands/build';
+import { extract } from './commands/extract';
 import { CLI } from './const';
-import { build, extract } from './index';
 
 // exit process on termination
 ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGKILL'].forEach((signal) =>
@@ -28,9 +29,8 @@ const SpriteCLI = new Command(CLI.name)
 SpriteCLI.command('build')
   .description('Generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options]')}`)
-  .option('-i, --input <folder>', text('Specify the input folder', 'current dir'))
-  .option('-o, --output <file>', text('Specify the output file', './sprite.svg'))
-  .option('-p, --prefix <string>', text('Prefix for icon names'))
+  .option('-e, --entries <entries...>', text('Specify the input paths'))
+  .option('-p, --prefix [string]', text('Prefix for icon names'))
   .option('-w, --watch', text('Enable watch mode, monitor the input directory', 'false'))
   .option('-c, --clear', text('Clear out output files', 'true'))
   .action(async (args) => {
@@ -41,9 +41,8 @@ SpriteCLI.command('build')
 SpriteCLI.command('extract')
   .description('Extract svg icons from existing sprite sheet')
   .usage(`${pi.dim('[options]')}`)
-  .option('-i, --input <folder>', text('Specify the input folder', 'current dir'))
-  .option('-o, --output <file>', text('Specify the output file', './sprite.svg'))
-  .option('-p, --prefix <string>', text('Prefix for icon names'))
+  .option('-e, --entries <entries...>', text('Specify the input paths'))
+  .option('-p, --prefix [string]', text('Prefix for icon names'))
   .action(extract);
 
 SpriteCLI.parseAsync().catch(() => process.exit(1));

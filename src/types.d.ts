@@ -1,12 +1,15 @@
 import type { PluginConfig } from 'svgo';
 
+export type Entries = Record<string, string> | string[];
+
+export type ResolvedEntries = { input: string; output: string }[];
+
 export type SpriteConfig = {
   cwd?: string;
-  input?: string;
-  output?: string;
-  prefix?: string;
+  entries: Entries;
+  iconPrefix?: string;
   /** Specify the suffix for output files */
-  outputFileSuffix?: {
+  outFileSuffix?: {
     sprite?: string;
     meta?: string;
   };
@@ -29,7 +32,9 @@ type Predefined<T> = Required<{
     : T[P];
 }>;
 
-export type ResolvedConfig = Predefined<SpriteConfig>;
+export type ResolvedConfig = Predefined<Omit<SpriteConfig, 'entries'>> & {
+  entries: ResolvedEntries;
+};
 
 export type IconData = {
   name: string;

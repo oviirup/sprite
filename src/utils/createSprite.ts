@@ -26,13 +26,11 @@ export function convertToSymbol({ name, content, config }: SymbolProps) {
     removeViewBox: false,
   };
 
-  const removeAttrs = ['xmlns'];
-
   const output = svgo.optimize(svg.toString(), {
     floatPrecision: 2,
     plugins: [
       { name: 'preset-default', params: { overrides: presetOverrides } },
-      { name: 'removeAttrs', params: { attrs: removeAttrs } },
+      { name: 'removeAttrs', params: { attrs: ['xmlns'] } },
       ...svgoPlugins,
     ],
   });
@@ -42,19 +40,21 @@ export function convertToSymbol({ name, content, config }: SymbolProps) {
 
 type SpriteFileProps = {
   svgIcons: IconData[];
+  outputPath: string;
   config: ResolvedConfig;
   timer?: number;
 };
 export async function createSpriteFiles({
   svgIcons,
+  outputPath,
   config,
   timer,
 }: SpriteFileProps) {
-  const { prefix = '', output, cwd } = config;
-  const files = outputFileNames(output, config.outputFileSuffix);
+  const { iconPrefix = '', cwd } = config;
+  const files = outputFileNames(outputPath, config.outFileSuffix);
 
   // svg icons with prefixed id
-  const icons = svgIcons.map((e) => ({ ...e, name: prefix + e.name }));
+  const icons = svgIcons.map((e) => ({ ...e, name: iconPrefix + e.name }));
 
   // sprite symbols
   const symbols = icons.map((item) => convertToSymbol({ ...item, config }));
