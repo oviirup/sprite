@@ -34,6 +34,7 @@ type Predefined<T> = Required<{
 
 export type ResolvedConfig = Predefined<Omit<SpriteConfig, 'entries'>> & {
   entries: ResolvedEntries;
+  configFile: string | null;
 };
 
 export type IconData = {

@@ -13,89 +13,87 @@ export async function build(opts: SpriteConfig) {
   const config = await resolveConfig(opts);
   const entries = config.entries;
 
-  // exit build if no entries provided
   if (entries.length === 0) {
-    let _error = `Invalid entries`;
+    const _error = `Invalid entries`;
     logger(pi.red(_error));
-    logger(pi.dim(`Make sure add entries as array or object to the config\n`));
+    logger(pi.dim(`Make sure to add entries to the config\n`));
     return { error: _error };
   }
 
-  Promise.all(
-    entries.map(({ input, output }) => {
-      return iterateThroughEntries(input, output, config);
-    }),
-  );
+  await processEntries(entries, config);
 }
 
-async function iterateThroughEntries(
-  inputPath: string,
-  outputPath: string,
+async function processEntries(
+  entries: ResolvedEntries,
   config: ResolvedConfig,
 ) {
   const cwd = config.cwd;
-  const relativeInputPath = relativePath(inputPath, cwd);
+  const configFile = config.configFile;
   // start performance counter
   const timer = performance.now();
 
-  // exit build if input path does not exists
-  if (!fs.existsSync(inputPath)) {
-    let _error = `${relativeInputPath} does not exists`;
-    logger(pi.red(_error));
-    logger(pi.dim(`Make sure you've entered the correct input path\n`));
-    return { error: _error };
-  }
+  // loop through each entries
+  entries.forEach(async (entry) => {
+    const inputPath = entry.input;
+    const outputPath = entry.output;
+    const relativeInputPath = relativePath(inputPath, cwd);
 
-  // get all svg files form input directory
-  const svgFilePaths = fs
-    .readdirSync(inputPath)
-    .filter((filePath) => filePath.endsWith('.svg'))
-    .map((filePath) => path.resolve(inputPath, filePath));
+    // exit build if input path does not exists
+    if (!fs.existsSync(inputPath)) {
+      const _error = `${relativeInputPath} does not exist`;
+      logger(pi.red(_error));
+      logger(pi.dim(`Make sure you've entered the correct input path\n`));
+      return { error: _error };
+    }
 
-  // throw error if no icon files found
-  if (svgFilePaths.length === 0) {
-    let _error = `No SVG files found in ${relativeInputPath}`;
-    logger(pi.red(_error));
-    logger(`Make sure to keep all svg icons in mentioned path\n`);
-    return { error: _error };
-  }
+    // get all svg files form input directory
+    const svgFilePaths = fs
+      .readdirSync(inputPath)
+      .filter((filePath) => filePath.endsWith('.svg'))
+      .map((filePath) => path.resolve(inputPath, filePath));
 
-  // clear out previous builds
-  if (config.clear) {
-    const files = outputFileNames(outputPath, config.outFileSuffix);
-    Object.values(files).forEach((file) => {
-      if (fs.existsSync(file)) fs.rmSync(file);
+    // throw error if no icon files found
+    if (svgFilePaths.length === 0) {
+      const _error = `No SVG files found in ${relativeInputPath}`;
+      logger(pi.red(_error));
+      logger(`Make sure to keep all svg icons in the mentioned path\n`);
+      return { error: _error };
+    }
+
+    // clear out previous build files
+    if (config.clear) {
+      const files = outputFileNames(outputPath, config.outFileSuffix);
+      Object.values(files).forEach((file) => {
+        if (fs.existsSync(file)) fs.rmSync(file);
+      });
+    }
+
+    // get svg icons and convert to symbols
+    const svgIcons = await getSvgIcons(svgFilePaths);
+    // create sprite files
+    createSpriteFiles({ svgIcons, outputPath, config, timer });
+  });
+
+  // watch for changes
+  if (config.watch) {
+    const { watch } = await import('chokidar');
+    const watchPaths = entries.map((e) => e.input); // watch all entries
+    configFile && watchPaths.push(configFile); // watch the config file
+
+    logger(`Watching for changes`);
+
+    const watcher = watch(watchPaths, {
+      ignoreInitial: true, // ignore initial scan
+      awaitWriteFinish: { stabilityThreshold: 50, pollInterval: 10 },
+    });
+
+    watcher.on('all', (event, fileName) => {
+      if (event === 'addDir' || event === 'unlinkDir') return;
+      if (!fileName) return;
+      const timer = performance.now();
+      watcher.close();
+      processEntries(entries, config);
+      logger(`Rebuild finished`, timer);
     });
   }
-
-  // get svg icons and convert to symbols
-  const svgIcons = await getSvgIcons(svgFilePaths);
-  // create sprite files
-  createSpriteFiles({ svgIcons, outputPath, config, timer });
-  // watch for changes
-  config.watch && watchEntries(inputPath, outputPath, config);
-}
-
-async function watchEntries(
-  inputPath: string,
-  outputPath: string,
-  config: ResolvedConfig,
-) {
-  const { watch } = await import('chokidar');
-  const cwd = config.cwd;
-
-  logger(`watching for changes in ${relativePath(inputPath, cwd)} `);
-
-  const watcher = watch(inputPath, {
-    cwd,
-    ignoreInitial: true, // ignore initial scan
-    awaitWriteFinish: { stabilityThreshold: 50, pollInterval: 10 },
-  }).on('all', (event, fileName) => {
-    if (event === 'addDir' || event === 'unlinkDir') return; // ignore dir changes
-    if (fileName == null) return;
-    const begin = performance.now();
-    watcher.close();
-    iterateThroughEntries(inputPath, outputPath, config);
-    logger(`Rebuild finished`, begin);
-  });
 }
