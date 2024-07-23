@@ -33,7 +33,7 @@ async function processEntries(
   const timer = performance.now();
 
   // loop through each entries
-  entries.forEach(async (entry) => {
+  for (const entry of entries) {
     const inputPath = entry.input;
     const outputPath = entry.output;
     const relativeInputPath = relativePath(inputPath, cwd);
@@ -43,7 +43,7 @@ async function processEntries(
       const _error = `${relativeInputPath} does not exist`;
       logger(pi.red(_error));
       logger(pi.dim(`Make sure you've entered the correct input path\n`));
-      return { error: _error };
+      continue;
     }
 
     // get all svg files form input directory
@@ -57,7 +57,7 @@ async function processEntries(
       const _error = `No SVG files found in ${relativeInputPath}`;
       logger(pi.red(_error));
       logger(`Make sure to keep all svg icons in the mentioned path\n`);
-      return { error: _error };
+      continue;
     }
 
     // clear out previous build files
@@ -71,8 +71,8 @@ async function processEntries(
     // get svg icons and convert to symbols
     const svgIcons = await getSvgIcons(svgFilePaths);
     // create sprite files
-    createSpriteFiles({ svgIcons, outputPath, config, timer });
-  });
+    await createSpriteFiles({ svgIcons, outputPath, config, timer });
+  }
 
   // watch for changes
   if (config.watch) {
