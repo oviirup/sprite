@@ -25,7 +25,7 @@ export async function resolveConfig(opts: SpriteConfig) {
 
   config.watch ??= process.env.NODE_ENV === 'development';
   config.clear ??= false;
-  config.iconPrefix ??= '';
+  config.iconPrefix = config.iconPrefix?.trim() || '';
   config.svgoPlugins ??= [];
 
   // default output file suffix
