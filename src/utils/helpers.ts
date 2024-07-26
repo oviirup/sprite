@@ -13,8 +13,8 @@ export async function getSvgIcons(filePaths: string[]) {
     filePaths.map(async (filePath) => {
       const content = await readFile(filePath);
       if (!content) return;
-      const iconName = getIconName(filePath);
-      icons.push({ path: filePath, name: iconName, content });
+      const name = getIconName(filePath);
+      icons.push({ filePath, name, content });
     }),
   );
   const sortedIcons = icons.sort((a, b) => {

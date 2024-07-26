@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "displayName": "sprite",
   "description": "Create svg sprite from svg files",
   "repository": {
@@ -28,6 +28,8 @@
   ],
   "scripts": {
     "build": "bunchee -m",
+    "check:format": "prettier --check -u .",
+    "check:types": "tsc --noEmit",
     "dev": "bunchee -w",
     "format": "prettier -w -u --cache .",
     "prepack": "husky",

@@ -39,6 +39,6 @@ export type ResolvedConfig = Predefined<Omit<SpriteConfig, 'entries'>> & {
 
 export type IconData = {
   name: string;
-  path: string;
+  filePath: string;
   content: string;
 };

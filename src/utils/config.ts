@@ -8,7 +8,7 @@ import {
 } from '@/types';
 import { cosmiconfig } from 'cosmiconfig';
 
-export async function resolveConfig(opts: SpriteConfig) {
+export async function resolveConfig(opts?: SpriteConfig) {
   // get sprite config from config files or package.json
   // it can be stored in sprite.config.js , .spriterc.json etc...
   const res = await cosmiconfig(CLI.name).search();
@@ -16,7 +16,7 @@ export async function resolveConfig(opts: SpriteConfig) {
   const configFile = res?.filepath || null;
 
   // merged config
-  const config = Object.assign(DEFAULT_OPTIONS, packageConfig, opts);
+  const config = Object.assign(DEFAULT_OPTIONS, packageConfig, opts ?? {});
 
   // resolve input file paths
   config.configFile = configFile;

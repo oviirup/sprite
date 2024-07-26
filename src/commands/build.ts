@@ -6,10 +6,11 @@ import { createSpriteFiles } from '@/utils/createSprite';
 import { relativePath } from '@/utils/files';
 import { getSvgIcons, logger, outputFileNames } from '@/utils/helpers';
 import pi from 'picocolors';
+import { extractEntry } from './extract';
 
 export type { ResolvedConfig, SpriteConfig };
 
-export async function build(opts: SpriteConfig) {
+export async function build(opts?: SpriteConfig) {
   const config = await resolveConfig(opts);
   const entries = config.entries;
 
@@ -38,12 +39,18 @@ async function processEntries(
     const outputPath = entry.output;
     const relativeInputPath = relativePath(inputPath, cwd);
 
+    const outFiles = outputFileNames(outputPath, config.outFileSuffix);
+
     // exit build if input path does not exists
     if (!fs.existsSync(inputPath)) {
-      const _error = `${relativeInputPath} does not exist`;
-      logger(pi.red(_error));
-      logger(pi.dim(`Make sure you've entered the correct input path\n`));
-      continue;
+      if (fs.existsSync(outFiles.sprite)) {
+        await extractEntry({ entry, config });
+        continue;
+      } else {
+        logger(pi.red(`Entry "${relativeInputPath}" does not exist`));
+        logger(pi.dim(`Make sure you've entered the correct input path\n`));
+        continue;
+      }
     }
 
     // get all svg files form input directory
@@ -62,8 +69,7 @@ async function processEntries(
 
     // clear out previous build files
     if (config.clear) {
-      const files = outputFileNames(outputPath, config.outFileSuffix);
-      Object.values(files).forEach((file) => {
+      Object.values(outFiles).forEach((file) => {
         if (fs.existsSync(file)) fs.rmSync(file);
       });
     }
