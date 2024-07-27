@@ -20,19 +20,9 @@ export function convertToSymbol({ name, content, config }: SymbolProps) {
   svg.tagName = 'symbol'; // rename the tag
   svg.setAttribute('id', name); // give icon id
 
-  const presetOverrides: PresetDefaultOverrides = {
-    cleanupIds: false,
-    removeHiddenElems: false,
-    removeViewBox: false,
-  };
-
   const output = svgo.optimize(svg.toString(), {
     floatPrecision: 2,
-    plugins: [
-      { name: 'preset-default', params: { overrides: presetOverrides } },
-      { name: 'removeAttrs', params: { attrs: ['xmlns'] } },
-      ...svgoPlugins,
-    ],
+    plugins: svgoPlugins,
   });
 
   return output.data;

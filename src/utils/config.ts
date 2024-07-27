@@ -7,6 +7,8 @@ import {
   SpriteConfig,
 } from '@/types';
 import { cosmiconfig } from 'cosmiconfig';
+import { PluginConfig } from 'svgo';
+import { PresetDefaultOverrides } from 'svgo/plugins/plugins-types';
 
 export async function resolveConfig(opts?: SpriteConfig) {
   // get sprite config from config files or package.json
@@ -26,7 +28,7 @@ export async function resolveConfig(opts?: SpriteConfig) {
   config.watch ??= process.env.NODE_ENV === 'development';
   config.clear ??= false;
   config.iconPrefix = config.iconPrefix?.trim() || '';
-  config.svgoPlugins ??= [];
+  config.svgoPlugins = resolveSvgoPlugins(config.svgoPlugins);
 
   // default output file suffix
   config.outFileSuffix ??= {};
@@ -60,4 +62,26 @@ export function resolveEntries(entries: Entries, cwd: string): ResolvedEntries {
     }));
   }
   return [];
+}
+
+function resolveSvgoPlugins(plugins: PluginConfig[] = []) {
+  const disablePreset =
+    plugins.includes('preset-default') ||
+    plugins.find((e) => typeof e !== 'string' && e.name === 'preset-default');
+  console.log(1);
+
+  const overrides: PresetDefaultOverrides = {
+    cleanupIds: false,
+    removeHiddenElems: false,
+    removeViewBox: false,
+    convertPathData: false,
+  };
+
+  const svgoPlugins: PluginConfig[] = [
+    !disablePreset && { name: 'preset-default', params: { overrides } },
+    { name: 'removeAttrs', params: { attrs: ['xmlns'] } },
+    ...plugins,
+  ].filter((e): e is PluginConfig => !!e);
+
+  return svgoPlugins;
 }
