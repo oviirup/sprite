@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "displayName": "sprite",
   "description": "Create svg sprite from svg files",
   "repository": {
