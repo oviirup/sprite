@@ -41,8 +41,16 @@ async function processEntries(
 
     const outFiles = outputFileNames(outputPath, config.outFileSuffix);
 
-    // exit build if input path does not exists
-    if (!fs.existsSync(inputPath)) {
+    const inputPathExists = fs.existsSync(inputPath);
+    const svgFilePaths = inputPathExists
+      ? fs
+          .readdirSync(inputPath)
+          .filter((filePath) => filePath.endsWith('.svg'))
+          .map((filePath) => path.resolve(inputPath, filePath))
+      : [];
+
+    // exit build if input path does not exists, or has not svg icons
+    if (!fs.existsSync(inputPath) || svgFilePaths.length === 0) {
       if (fs.existsSync(outFiles.sprite)) {
         await extractEntry({ entry, config });
         continue;
@@ -52,12 +60,6 @@ async function processEntries(
         continue;
       }
     }
-
-    // get all svg files form input directory
-    const svgFilePaths = fs
-      .readdirSync(inputPath)
-      .filter((filePath) => filePath.endsWith('.svg'))
-      .map((filePath) => path.resolve(inputPath, filePath));
 
     // throw error if no icon files found
     if (svgFilePaths.length === 0) {

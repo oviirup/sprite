@@ -1,7 +1,14 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.2/schema.json",
-  "changelog": false,
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "oviirup/sprite-test" }
+  ],
   "commit": false,
+  "fixed": [],
+  "linked": [],
   "access": "public",
-  "baseBranch": "main"
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
 }

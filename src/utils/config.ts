@@ -68,7 +68,6 @@ function resolveSvgoPlugins(plugins: PluginConfig[] = []) {
   const disablePreset =
     plugins.includes('preset-default') ||
     plugins.find((e) => typeof e !== 'string' && e.name === 'preset-default');
-  console.log(1);
 
   const overrides: PresetDefaultOverrides = {
     cleanupIds: false,
