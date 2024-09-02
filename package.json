@@ -9,6 +9,7 @@
   },
   "author": "Avirup Ghosh (https://github.com/oviirup)",
   "license": "MIT",
+  "packageManager": "bun@1.1.26",
   "bin": "./dist/bin.js",
   "main": "./dist/index.js",
   "exports": {
