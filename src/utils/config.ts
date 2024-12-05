@@ -3,6 +3,7 @@ import path from 'path';
 import { ResolvedConfig, SpriteConfig, SpriteRecord, zSpriteRecord } from '@/schema';
 import fg from 'fast-glob';
 import yaml from 'yaml';
+import { readFile } from './files';
 import { logger } from './logger';
 
 /** Resolves sprite config from input */
@@ -46,7 +47,8 @@ export function resolveRecords({ entries, cwd }: ResolvedConfig) {
   for (const entry of entries) {
     const entryPath = path.resolve(cwd, entry);
     try {
-      const rawYAML = fs.readFileSync(entryPath, 'utf-8');
+      const rawYAML = readFile(entryPath);
+      if (!rawYAML) continue;
       const rawRecord = yaml.parse(rawYAML);
       const parsedRecord = zSpriteRecord.safeParse(rawRecord);
       if (parsedRecord.error) {
@@ -70,7 +72,7 @@ export function getPackageConfig(root?: string): Partial<SpriteConfig> {
     const filePath = path.join(cwd, 'package.json');
     try {
       if (fs.existsSync(filePath)) {
-        const content = fs.readFileSync(filePath, 'utf-8');
+        const content = readFile(filePath) ?? '{}';
         return JSON.parse(content).sprite || {};
       }
     } catch {

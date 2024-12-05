@@ -7,7 +7,7 @@ function customLogger(first: string | Function | null, ...rest: string[]) {
   } else if (first === null) {
     return console.log('        ', ...rest);
   }
-  return console.log(first, ...rest);
+  return console.log('[SPRITE]', first, ...rest);
 }
 
 export const logger = {

@@ -1,6 +1,6 @@
-import fs from 'fs';
 import { SpriteRecord } from '@/schema';
 import { parse } from 'node-html-parser';
+import { writeFile } from './files';
 import { kebabCase } from './helpers';
 import { logger } from './logger';
 
@@ -22,8 +22,8 @@ export function createSpriteFile({ icons, output, prefix = '' }: SpriteRecord, o
   ].join('\n');
 
   try {
-    fs.writeFileSync(outputFilePath, spriteContent);
-    logger.success(`sprite created "${output}"`);
+    const result = writeFile(outputFilePath, spriteContent);
+    if (result) logger.success(`sprite created "${output}"`);
   } catch {
     logger.error('unable to write sprite file');
   }

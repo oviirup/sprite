@@ -1,8 +1,10 @@
 import path from 'path';
-import { ResolvedConfig, SpriteConfig } from '@/schema';
+import { SpriteConfig } from '@/schema';
 import { resolveConfig, resolveRecords } from '@/utils/config';
+import { createSpriteFile } from '@/utils/createSpriteFile';
+import { logger } from '@/utils/logger';
 import chokidar from 'chokidar';
-import { createSpriteFile } from '../utils/createSpriteFile';
+import pi from 'picocolors';
 
 /**
  * Build sprite files from records
@@ -11,6 +13,7 @@ import { createSpriteFile } from '../utils/createSpriteFile';
  */
 export function build(config: Partial<SpriteConfig> = {}) {
   const cfg = resolveConfig(config);
+  logger.log('initializing ...');
 
   const internalRunBuild = () => {
     for (const record of resolveRecords(cfg)) {
@@ -22,11 +25,22 @@ export function build(config: Partial<SpriteConfig> = {}) {
   internalRunBuild();
 
   if (cfg.watch) {
+    logger.log('watching files');
+    for (const entry of cfg.entries) {
+      logger.log(null, pi.dim(`${entry}`));
+    }
     const watcher = chokidar.watch(cfg.entries, {
       ignoreInitial: true,
       cwd: cfg.cwd,
       awaitWriteFinish: true,
     });
-    watcher.on('change', internalRunBuild);
+    watcher.on('change', () => {
+      logger.log('entry file updated');
+      internalRunBuild();
+    });
+    watcher.on('unlink', () => {
+      logger.error('entry file is removed');
+      watcher.close();
+    });
   }
 }
