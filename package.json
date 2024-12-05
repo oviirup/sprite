@@ -35,7 +35,7 @@
     "cli"
   ],
   "scripts": {
-    "build": "bunchee -m",
+    "build": "bunchee",
     "check:format": "prettier --check -u .",
     "check:types": "tsc --noEmit",
     "clean": "npx rimraf node_modules dist",
@@ -48,7 +48,9 @@
     "commander": "~12.1.0",
     "fast-glob": "~3.3.2",
     "node-html-parser": "~6.1.13",
-    "yaml": "~2.6.1"
+    "picocolors": "~1.1.1",
+    "yaml": "~2.6.1",
+    "zod": "~3.23.8"
   },
   "devDependencies": {
     "@changesets/changelog-github": "~0.5.0",

@@ -1,86 +1,54 @@
-import path from 'node:path';
-import { CLI, DEFAULT_OPTIONS } from '@/const';
-import {
-  Entries,
-  ResolvedConfig,
-  ResolvedEntries,
-  SpriteConfig,
-} from '@/types';
-import { cosmiconfig } from 'cosmiconfig';
-import { PluginConfig } from 'svgo';
-import { PresetDefaultOverrides } from 'svgo/plugins/plugins-types';
+import fs, { cpSync } from 'fs';
+import path from 'path';
+import { ResolvedConfig, SpriteConfig } from '@/schema';
+import fg from 'fast-glob';
 
-export async function resolveConfig(opts?: SpriteConfig) {
-  // get sprite config from config files or package.json
-  // it can be stored in sprite.config.js , .spriterc.json etc...
-  const res = await cosmiconfig(CLI.name).search();
-  const packageConfig = !!res && !res.isEmpty ? res.config : {};
-  const configFile = res?.filepath || null;
+/** Resolves sprite config from input */
+export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
+  const pkgConfig = getPackageConfig();
+  const cfg = Object.assign(pkgConfig, config);
+  const cwd = cfg.cwd ? path.resolve(cfg.cwd) : process.cwd();
+  const watch = cfg.watch ?? false;
+  const entries = resolveEntries(cfg.entries, cwd);
 
-  // merged config
-  const config = Object.assign(DEFAULT_OPTIONS, packageConfig, opts ?? {});
-
-  // resolve input file paths
-  config.configFile = configFile;
-  config.cwd = path.resolve(process.cwd(), config.cwd);
-  config.entries = resolveEntries(config.entries, config.cwd);
-
-  config.watch ??= process.env.NODE_ENV === 'development';
-  config.clear ??= false;
-  config.iconPrefix = config.iconPrefix?.trim() || '';
-  config.svgoPlugins = resolveSvgoPlugins(config.svgoPlugins);
-
-  // default output file suffix
-  config.outFileSuffix ??= {};
-  config.outFileSuffix.sprite ??= '';
-  config.outFileSuffix.meta ??= '';
-
-  return config as ResolvedConfig;
+  return { cwd, watch, entries };
 }
 
-export function resolveEntries(entries: Entries, cwd: string): ResolvedEntries {
-  const getFileName = (inputPath: string, withDir = false) => {
-    let dir = withDir ? path.dirname(inputPath) : '';
-    let fileName = path.basename(inputPath);
-    fileName = fileName.replace(/^[._]/, '');
-    return path.join(dir, fileName + '.svg'); // remove leading "dot" or "underscore"
-  };
+/** Resolve sprite entries from glob patterns */
+export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd: string) {
+  entries = Array.isArray(entries) ? entries : typeof entries === 'string' ? [entries.trim()] : [];
 
-  const resolvePath = (entry: string, ...paths: string[]) => {
-    return path.resolve(cwd, path.dirname(entry), ...paths);
-  };
-
-  if (Array.isArray(entries)) {
-    return entries.map((entry) => ({
-      input: path.resolve(cwd, entry),
-      output: resolvePath(entry, getFileName(entry)),
-    }));
-  } else if (entries !== null && typeof entries === 'object') {
-    return Object.entries(entries).map(([output, input]) => ({
-      input: path.resolve(cwd, input),
-      output: resolvePath(input, getFileName(output, true)),
-    }));
+  if (entries.length === 0) {
+    throw new Error(`[SPRITE] No entries defined. Must use at least one entry`);
   }
-  return [];
+
+  for (const entry of entries) {
+    try {
+      const { ext } = path.parse(entry);
+      if (!/\.ya?ml/.test(ext)) throw new Error(`[SPRITE] Invalid entry: must end with .yaml / .yml`);
+    } catch {
+      throw new Error(`[SPRITE] Unable to parse entry`);
+    }
+  }
+
+  return fg.sync(entries, { cwd });
 }
 
-function resolveSvgoPlugins(plugins: PluginConfig[] = []) {
-  const disablePreset =
-    plugins.includes('preset-default') ||
-    plugins.find((e) => typeof e !== 'string' && e.name === 'preset-default');
-
-  const overrides: PresetDefaultOverrides = {
-    cleanupIds: false,
-    removeHiddenElems: false,
-    removeViewBox: false,
-    convertPathData: false,
-  };
-
-  const svgoPlugins: PluginConfig[] = [
-    !disablePreset && { name: 'preset-default', params: { overrides } },
-    { name: 'removeAttrs', params: { attrs: ['xmlns'] } },
-    ...plugins,
-  ].filter((e): e is PluginConfig => !!e);
-
-  return svgoPlugins;
+/** Get sprite config form nearest package.json */
+export function getPackageConfig(root?: string): Partial<SpriteConfig> {
+  let cwd = root ?? process.cwd();
+  while (true) {
+    const filePath = path.join(cwd, 'package.json');
+    try {
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf-8');
+        return JSON.parse(content).sprite || {};
+      }
+    } catch {
+      return {};
+    }
+    const parent = path.dirname(cwd);
+    if (parent === cwd) return {};
+    cwd = parent;
+  }
 }
