@@ -1,38 +1,32 @@
-import fs from 'fs';
 import path from 'path';
-import { SpriteConfig, SpriteRecord, zSpriteRecord } from '@/schema';
-import { resolveConfig } from '@/utils/config';
-import { logger } from '@/utils/logger';
-import { parse } from 'node-html-parser';
-import YAML from 'yaml';
+import { ResolvedConfig, SpriteConfig } from '@/schema';
+import { resolveConfig, resolveRecords } from '@/utils/config';
+import chokidar from 'chokidar';
 import { createSpriteFile } from '../utils/createSpriteFile';
 
+/**
+ * Build sprite files from records
+ *
+ * @param config - Sprite configuration
+ */
 export function build(config: Partial<SpriteConfig> = {}) {
   const cfg = resolveConfig(config);
 
-  for (const entry of cfg.entries) {
-    const entryPath = path.resolve(cfg.cwd, entry);
-    if (!fs.existsSync(entryPath)) {
-      logger.error(`file "${entry}" does not exists`);
-      continue;
+  const internalRunBuild = () => {
+    for (const record of resolveRecords(cfg)) {
+      const outputFilePath = path.resolve(cfg.cwd, record.output);
+      createSpriteFile(record, outputFilePath);
     }
+  };
 
-    let record: SpriteRecord;
-    try {
-      const rawYAML = fs.readFileSync(entryPath, 'utf-8');
-      const rawRecord = YAML.parse(rawYAML);
-      const parsedRecord = zSpriteRecord.safeParse(rawRecord);
-      if (parsedRecord.error) {
-        logger.zodError(parsedRecord.error);
-        continue;
-      }
-      record = parsedRecord.data;
-    } catch {
-      logger.error(`unable to parse record "${entry}"`);
-      continue;
-    }
+  internalRunBuild();
 
-    const outputPath = path.resolve(cfg.cwd, record.dest);
-    createSpriteFile(record, outputPath);
+  if (cfg.watch) {
+    const watcher = chokidar.watch(cfg.entries, {
+      ignoreInitial: true,
+      cwd: cfg.cwd,
+      awaitWriteFinish: true,
+    });
+    watcher.on('change', internalRunBuild);
   }
 }

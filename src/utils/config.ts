@@ -1,7 +1,9 @@
-import fs, { cpSync } from 'fs';
+import fs from 'fs';
 import path from 'path';
-import { ResolvedConfig, SpriteConfig } from '@/schema';
+import { ResolvedConfig, SpriteConfig, SpriteRecord, zSpriteRecord } from '@/schema';
 import fg from 'fast-glob';
+import yaml from 'yaml';
+import { logger } from './logger';
 
 /** Resolves sprite config from input */
 export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
@@ -17,6 +19,7 @@ export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
 /** Resolve sprite entries from glob patterns */
 export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd: string) {
   entries = Array.isArray(entries) ? entries : typeof entries === 'string' ? [entries.trim()] : [];
+  entries = entries.filter((e) => !!e.trim());
 
   if (entries.length === 0) {
     throw new Error(`[SPRITE] No entries defined. Must use at least one entry`);
@@ -25,13 +28,39 @@ export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd
   for (const entry of entries) {
     try {
       const { ext } = path.parse(entry);
-      if (!/\.ya?ml/.test(ext)) throw new Error(`[SPRITE] Invalid entry: must end with .yaml / .yml`);
+      if (!entry.startsWith('!') && !/\.ya?ml/.test(ext)) {
+        throw new Error(`[SPRITE] Invalid entry: must end with .yaml / .yml`);
+      }
     } catch {
-      throw new Error(`[SPRITE] Unable to parse entry`);
+      logger.error('Unable to parse entry\n');
+      throw new Error();
     }
   }
 
   return fg.sync(entries, { cwd });
+}
+
+/** Resolve records from entries */
+export function resolveRecords({ entries, cwd }: ResolvedConfig) {
+  const spriteRecords: SpriteRecord[] = [];
+  for (const entry of entries) {
+    const entryPath = path.resolve(cwd, entry);
+    try {
+      const rawYAML = fs.readFileSync(entryPath, 'utf-8');
+      const rawRecord = yaml.parse(rawYAML);
+      const parsedRecord = zSpriteRecord.safeParse(rawRecord);
+      if (parsedRecord.error) {
+        logger.zodError(parsedRecord.error);
+        continue;
+      }
+      const record = parsedRecord.data;
+      spriteRecords.push(record);
+    } catch {
+      logger.error(`unable to parse record "${entry}"`);
+      continue;
+    }
+  }
+  return spriteRecords;
 }
 
 /** Get sprite config form nearest package.json */

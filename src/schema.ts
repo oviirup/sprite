@@ -51,12 +51,29 @@ export const zSpriteRecord = z.object(
       .regex(/[a-zA-Z\d]*/, { message: 'invalid prefix' })
       .default(''),
     /** Output file without extension, relative to cwd */
-    dest: z
-      .string({ message: 'invalid dest' })
+    output: z
+      .string({ message: 'invalid output' })
       .regex(/\.svg$/, { message: 'output file must end with .svg' })
-      .min(1, { message: '"dest" is required' }),
+      .min(1, { message: '"output" is required' }),
     /** Icon sets */
-    icons: z.array(zIcon, { message: 'invalid icons' }).default([]),
+    icons: z
+      .array(zIcon, { message: 'invalid icons' })
+      .default([])
+      .superRefine((icons, ctx) => {
+        const names = new Set();
+        icons.forEach((icon, index) => {
+          if (names.has(icon.name)) {
+            // Add an error for the current icon index
+            ctx.addIssue({
+              path: [index, 'name'],
+              message: `icon name "${icon.name}" is not unique`,
+              code: z.ZodIssueCode.custom,
+            });
+          } else {
+            names.add(icon.name);
+          }
+        });
+      }),
   },
   {
     message: 'invalid sprite record',

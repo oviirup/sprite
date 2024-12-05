@@ -4,7 +4,7 @@ import { parse } from 'node-html-parser';
 import { kebabCase } from './helpers';
 import { logger } from './logger';
 
-export function createSpriteFile({ icons, prefix = '' }: SpriteRecord, outputPath: string) {
+export function createSpriteFile({ icons, output, prefix = '' }: SpriteRecord, outputFilePath: string) {
   const symbols = icons.map(({ name, content, attributes = {} }) => {
     const xml = parse('<symbol></symbol>');
     const symbol = xml.getElementsByTagName('symbol')[0];
@@ -22,7 +22,8 @@ export function createSpriteFile({ icons, prefix = '' }: SpriteRecord, outputPat
   ].join('\n');
 
   try {
-    fs.writeFileSync(outputPath, spriteContent);
+    fs.writeFileSync(outputFilePath, spriteContent);
+    logger.success(`sprite created "${output}"`);
   } catch {
     logger.error('unable to write sprite file');
   }
