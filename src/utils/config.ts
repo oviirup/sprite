@@ -23,17 +23,14 @@ export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd
   entries = entries.filter((e) => !!e.trim());
 
   if (entries.length === 0) {
-    throw new Error(`[SPRITE] No entries defined. Must use at least one entry`);
+    logger.error('no entries defined. Must use at least one entry');
+    throw new Error();
   }
 
   for (const entry of entries) {
-    try {
-      const { ext } = path.parse(entry);
-      if (!entry.startsWith('!') && !/\.ya?ml/.test(ext)) {
-        throw new Error(`[SPRITE] Invalid entry: must end with .yaml / .yml`);
-      }
-    } catch {
-      logger.error('Unable to parse entry\n');
+    const { ext } = path.parse(entry);
+    if (!entry.startsWith('!') && !/\.ya?ml$/.test(ext)) {
+      logger.error('invalid entry: must end with ".yaml" or ".yml"');
       throw new Error();
     }
   }

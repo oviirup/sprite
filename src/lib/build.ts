@@ -15,6 +15,11 @@ export function build(config: Partial<SpriteConfig> = {}) {
   const cfg = resolveConfig(config);
   logger.log('initializing ...');
 
+  if (cfg.entries.length < 1) {
+    logger.error('no entries found');
+    throw new Error();
+  }
+
   const internalRunBuild = () => {
     for (const record of resolveRecords(cfg)) {
       const outputFilePath = path.resolve(cfg.cwd, record.output);
