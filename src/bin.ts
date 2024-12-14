@@ -1,31 +1,40 @@
 #!/usr/bin/env node
+import { PKG_DESC, PKG_NAME, PKG_VERSION } from '@/const';
 import { build } from '@/lib/build';
+import { studio } from '@/lib/studio';
 import { logger } from '@/utils/logger';
 import { Command } from 'commander';
 import pi from 'picocolors';
-import pkg from '../package.json';
 
-const CLI = {
-  name: pkg.displayName,
-  desc: pkg.description,
-  version: pkg.version,
-};
-
-const SpriteCLI = new Command(CLI.name)
-  .description(CLI.desc)
+const SpriteCLI = new Command(PKG_NAME)
+  .description(PKG_DESC)
   .usage(`${pi.dim('[command] [options]')}`)
-  .version(CLI.version, '-v, --version')
+  .version(PKG_VERSION, '-v, --version')
   .helpCommand(false);
 
 // define build command -->
 SpriteCLI.command('build')
   .description('generate optimized svg sprite sheet')
-  .usage(`${pi.dim('[options]')}`)
-  .argument('<entries...>', 'specify the input paths')
+  .usage(`${pi.dim('[options] [entries...]')}`)
+  .argument('[entries...]', 'specify the input paths')
   .option('-w, --watch', 'enable watch mode, monitor the input directory')
-  .option('--cwd', 'specify working directory')
+  .option('    --cwd', 'specify working directory')
   .action((args, opts) => {
-    build({ entries: args, ...opts });
+    const entries = args ?? [];
+    build({ entries, ...opts });
+  });
+
+SpriteCLI.command('studio')
+  .description('start sprite studio server')
+  .usage(`${pi.dim('[options] [entries...]')}`)
+  .argument('[entries...]', 'specify the input paths')
+  .option('-w, --watch', 'enable watch mode, monitor the input directory')
+  .option('    --cwd', 'specify working directory')
+  .option('-h, --host', 'host / address of the studio server')
+  .option('-p, --port', 'port of the studio server')
+  .action((args, opts) => {
+    const entries = args ?? [];
+    studio({ entries, ...opts });
   });
 
 SpriteCLI.parseAsync().catch(() => process.exit(1));
