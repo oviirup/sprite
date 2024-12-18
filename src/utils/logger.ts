@@ -22,3 +22,11 @@ export const logger = {
     }
   },
 };
+
+export class SpriteError extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.name = 'SpriteError';
+    logger.error(message ?? 'error');
+  }
+}
