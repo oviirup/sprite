@@ -28,5 +28,6 @@ export class SpriteError extends Error {
     super(message);
     this.name = 'SpriteError';
     logger.error(message ?? 'error');
+    Error.captureStackTrace(this, this.constructor); // Maintains proper stack trace
   }
 }

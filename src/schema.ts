@@ -30,9 +30,10 @@ export const zIcon = z.object(
     /** SVG attributes */
     attributes: z
       .record(z.coerce.string({ message: 'invalid attribute' }), { message: 'invalid attributes' })
-      .default({}),
+      .default({})
+      .optional(),
     /** Tags for the icon for search, (optional) */
-    tags: z.array(z.string(), { message: 'invalid tags' }).default([]),
+    tags: z.array(z.string(), { message: 'invalid tags' }).default([]).optional(),
   },
   {
     message: 'invalid icon data',
@@ -49,7 +50,8 @@ export const zSpriteRecord = z.object(
     prefix: z
       .string({ message: 'invalid prefix' })
       .regex(/[a-zA-Z\d]*/, { message: 'invalid prefix' })
-      .default(''),
+      .default('')
+      .optional(),
     /** Output file without extension, relative to cwd */
     output: z
       .string({ message: 'invalid output' })
