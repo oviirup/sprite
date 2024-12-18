@@ -3,13 +3,30 @@ import path from 'path';
 import { ResolvedConfig, SpriteConfig, SpriteRecord, zSpriteRecord } from '@/schema';
 import fg from 'fast-glob';
 import yaml from 'yaml';
+import { z } from 'zod';
 import { readFile } from './files';
-import { logger } from './logger';
+import { logger, SpriteError } from './logger';
 
 /** Resolves sprite config from input */
 export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
-  const pkgConfig = getPackageConfig();
-  const cfg = Object.assign(pkgConfig, config);
+  const pkg = getPackageJson();
+  if (!pkg?.content) {
+    throw new SpriteError('could not find nearest package.json');
+  }
+  const cfg: Partial<SpriteConfig> = pkg.content['sprite'];
+
+  const zEntryString = z.string().min(1);
+  const zEntries = z
+    .union([zEntryString, z.array(zEntryString).min(1)])
+    .transform((val) => (typeof val === 'string' ? [val] : val));
+  const parsedEntries = zEntries.safeParse(config.entries);
+
+  cfg.cwd ??= config.cwd;
+  cfg.watch ??= config.watch;
+  if (parsedEntries.data?.length) {
+    cfg.entries = parsedEntries.data;
+  }
+
   const cwd = cfg.cwd ? path.resolve(cfg.cwd) : process.cwd();
   const watch = cfg.watch ?? false;
   const entries = resolveEntries(cfg.entries, cwd);
@@ -21,10 +38,8 @@ export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
 export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd: string) {
   entries = Array.isArray(entries) ? entries : typeof entries === 'string' ? [entries.trim()] : [];
   entries = entries.filter((e) => !!e.trim());
-
   if (entries.length === 0) {
-    logger.error('no entries defined. Must use at least one entry');
-    throw new Error();
+    throw new SpriteError('no entries defined. Must use at least one entry');
   }
 
   for (const entry of entries) {
@@ -62,21 +77,26 @@ export function resolveRecords({ entries, cwd }: ResolvedConfig) {
   return spriteRecords;
 }
 
-/** Get sprite config form nearest package.json */
-export function getPackageConfig(root?: string): Partial<SpriteConfig> {
-  let cwd = root ?? process.cwd();
-  while (true) {
+/** Get the nearest package.json */
+export function getPackageJson(cwd?: string, maxDepth: number = 10) {
+  cwd ??= process.cwd();
+  let currentDepth = 0;
+
+  while (currentDepth <= maxDepth) {
     const filePath = path.join(cwd, 'package.json');
     try {
       if (fs.existsSync(filePath)) {
-        const content = readFile(filePath) ?? '{}';
-        return JSON.parse(content).sprite || {};
+        const raw = readFile(filePath) || JSON.stringify({});
+        const content = JSON.parse(raw) as Record<string, any>;
+        return { content, filePath };
       }
     } catch {
-      return {};
+      return null;
     }
     const parent = path.dirname(cwd);
-    if (parent === cwd) return {};
+    if (parent === cwd) break; // Reached the filesystem root
     cwd = parent;
+    currentDepth++;
   }
+  return null;
 }
