@@ -47,6 +47,6 @@ export function writeFile(filePath: string, content: string) {
 }
 
 /** Returns relative path of given file path */
-export function relativePath(filePath: string, cwd = process.cwd()) {
-  return path.relative(cwd, filePath).replace(/\\/g, '/');
+export function relativePath(from: string, to: string) {
+  return path.relative(from, to).replace(/\\/g, '/');
 }

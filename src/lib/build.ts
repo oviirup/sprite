@@ -2,7 +2,7 @@ import path from 'path';
 import { SpriteConfig } from '@/schema';
 import { resolveConfig, resolveRecords } from '@/utils/config';
 import { createSpriteFile } from '@/utils/createSpriteFile';
-import { logger } from '@/utils/logger';
+import { logger, SpriteError } from '@/utils/logger';
 import chokidar from 'chokidar';
 import pi from 'picocolors';
 
@@ -16,8 +16,7 @@ export function build(config: Partial<SpriteConfig> = {}) {
   logger.log('initializing ...');
 
   if (cfg.entries.length < 1) {
-    logger.error('no entries found');
-    throw new Error();
+    throw new SpriteError('no entries found');
   }
 
   const internalRunBuild = () => {
