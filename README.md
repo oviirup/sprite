@@ -1,4 +1,4 @@
-# Sprite
+# Sprite ![](https://img.shields.io/badge/WIP-gold)
 
 ![publish](https://github.com/oviirup/sprite/workflows/Publish/badge.svg)
 [![version](https://img.shields.io/npm/v/sprite)](https://www.npmjs.com/package/sprite)
@@ -22,16 +22,21 @@ It will install the package with binary `sprite`
 
 ### Setup a sprite project
 
-Create a entry file with `.yaml` <sup><a href='#sprite-record-config'>REF</a></sup> as follows ...
+You can initiate a simple project with `init` command,
+
+```bash
+npm sprite init
+```
+
+You can also manually create a entry file with `.yaml` <sup><a href='#sprite-record-config'>REF</a></sup> as follows ...
 
 ```yaml
 # icons.yaml
 name: lucide-icons
 output: icons.sprite.svg
 icons:
-  - name: arrow-up
-    content: <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
-    tags: [device, notification, time, clock]
+  - name: 'home',
+    content: <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>,
     attributes:
       viewBox: 0 0 24 24
       fill: none
