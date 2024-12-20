@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.1
+
+### Patch Changes
+
+- [`34c9606`](https://github.com/oviirup/sprite/commit/34c9606c3ab1e33e4bf0d8a42f27b6efb11c3fdf) Thanks [@oviirup](https://github.com/oviirup)! - add support for generating type definitions
+
 ## 0.1.0
 
 ### Minor Changes
