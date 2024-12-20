@@ -4,13 +4,10 @@ import path from 'node:path';
 /**
  * Ensure the directory exists
  *
- * @param targetPath Path to directory
- * @param isFilePath Specify if the given target path is a file
+ * @param targetPath - Path to directory
+ * @param isFilePath - Specify if the given target path is a file
  */
-export function ensureDirectory(
-  targetPath: string,
-  isFilePath: boolean = false,
-) {
+export function ensureDirectory(targetPath: string, isFilePath: boolean = false) {
   targetPath = isFilePath ? path.dirname(targetPath) : targetPath;
   if (!fs.existsSync(targetPath)) {
     fs.mkdirSync(targetPath, { recursive: true });
@@ -22,9 +19,12 @@ export function ensureDirectory(
  *
  * @param filePath - Target file path
  */
-export async function readFile(filePath: string) {
-  if (!fs.existsSync(filePath)) return;
-  return await fs.promises.readFile(filePath, 'utf-8').catch(() => '');
+export function readFile(filePath: string, encoding: BufferEncoding = 'utf-8') {
+  try {
+    return fs.readFileSync(filePath, encoding);
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -34,32 +34,19 @@ export async function readFile(filePath: string) {
  * @param content - File content
  * @param override - Override existing file
  */
-export async function writeFile(
-  filePath: string,
-  content: string,
-  override = false,
-) {
-  if (!override) {
-    const current = await readFile(filePath);
-    if (current === content) return false;
-  }
-  ensureDirectory(filePath, true);
-  fs.writeFileSync(filePath, content, 'utf-8');
-  return true;
+export function writeFile(filePath: string, content: string) {
+  try {
+    const current = readFile(filePath);
+    if (current !== content) {
+      ensureDirectory(filePath, true);
+      fs.writeFileSync(filePath, content, 'utf-8');
+      return true;
+    }
+  } catch {}
+  return false;
 }
 
 /** Returns relative path of given file path */
-export function relativePath(filePath: string, cwd = process.cwd()) {
-  return path.relative(cwd, filePath).replace(/\\/g, '/');
-}
-
-type FileNameOverride = { prefix: string; suffix: string; ext: string };
-/** Compose a new filename with suffix, prefix, and extension */
-export function composeFileName(
-  filePath: string,
-  { prefix = '', suffix = '', ext }: Partial<FileNameOverride>,
-) {
-  const { dir, name, ext: fileExt } = path.parse(filePath);
-  let fileName = prefix + name + suffix + (ext ? ext : fileExt);
-  return path.join(dir, fileName);
+export function relativePath(from: string, to: string) {
+  return path.relative(from, to).replace(/\\/g, '/');
 }

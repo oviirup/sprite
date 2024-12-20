@@ -2,30 +2,54 @@
 
 > Any change matters, whatever the size, just do it.
 
-Contributions are always welcome, no matter how large or small! Before contributing, please read the [code of conduct](./code_of_conduct.md).
+Thanks for taking interest in making contribution to project. We are happy to have you here.
+
+Before submitting your first pull-request please go through this document. We recommend to check for open [issues](https://github.com/oviirup/sprite/issues?q=is:open+is:issue) or [PR](https://github.com/oviirup/sprite/pulls?q=is:open+is:pr) to see of someone is already working on similar issue. Also read the community [code of conduct](./code_of_conduct.md) before anything else.
 
 ## How Do I Contribute?
 
-There are different ways to contribute, each comes with a different levels
-of tasks, such as:
+There are different ways to contribute, each comes with different levels of tasks, such as:
 
 - Report a bug.
-- Request a feature you think would be great for the plugin.
-- Take the ownership of the bug you want to fix and let others know about it by commenting on the issue.
+- Request a feature you think is necessary.
+- Take ownership of the bug you want to fix and let others know about it by commenting on the issue.
 - Test and triage reported bugs by others.
 - Work on requested/approved features.
-- Improve the codebase (lint, naming, comments, test descriptions, etc...)
+- Improve the codebase (lint, naming, comments, tests etc...)
 - Improve the documentation.
-- Let the world know about the plugin!
 
-### Submitting a Pull Request
+## Development
 
-The following are the steps you should follow when creating a pull request.
-Subsequent pull requests only need to follow step 3 and beyond.
+### Fork & clone to local machine
 
-1. Fork the repository on GitHub
-2. Clone the forked repository to your machine
-3. Make your changes and commit them to your local repository
-4. Rebase and push your commits to your GitHub remote fork/repository
-5. Issue a Pull Request to the official repository
-6. Your Pull Request is reviewed by a committer and merged into the repository
+Fork the repo from GitHub by clicking the fork button at the top-right and clone it...
+
+```bash
+git clone https://github.com/username/sprite.git
+```
+
+### Create a new branch
+
+Please make sure you are not on the **main** branch before making any changes.
+
+```bash
+git checkout -b my-new-branch
+```
+
+### Install dependencies
+
+```bash
+bun install
+```
+
+### Make your desired changes ...
+
+Now you can make changes to the repo or [create a new plugin](#create-a-new-plugin).
+
+## Create a new Plugin
+
+The project comes with auto code generation. you can do it automatically or manually.
+
+## Testing
+
+Tests are an integral part of any codebase. But as of December 2024 this project does not contains any tests, But we encourage contributors to add breaking tests.

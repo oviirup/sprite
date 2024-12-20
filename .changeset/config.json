@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.2/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "oviirup/sprite" }
-  ],
+  "changelog": ["@changesets/changelog-github", { "repo": "oviirup/sprite" }],
   "commit": false,
   "fixed": [],
   "linked": [],

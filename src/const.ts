@@ -1,10 +1,5 @@
 import { description, displayName, version } from '../package.json';
-import { SpriteConfig } from './types';
 
-export const CLI = { name: displayName, version, description };
-
-/** Default options for sprite generator */
-export const DEFAULT_OPTIONS: SpriteConfig = {
-  cwd: process.cwd(),
-  entries: ['./public/.icons'],
-};
+export const PKG_NAME = displayName;
+export const PKG_DESC = description;
+export const PKG_VERSION = version;

@@ -1,4 +1,3 @@
-export type { ResolvedConfig, SpriteConfig } from '@/types';
+export type { ResolvedConfig, SpriteConfig, SpriteRecord, Icon } from '@/schema';
 
-export * from '@/commands/build';
-export * from '@/commands/extract';
+export * from '@/lib/build';

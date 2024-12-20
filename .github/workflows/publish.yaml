@@ -1,4 +1,4 @@
-name: Publish CLI Tool
+name: Publish
 
 on:
   push:
@@ -8,30 +8,19 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: 🟢 Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
+      - name: 🟢 Setup CI environment
+        uses: ./.github/actions/setup
 
-      - name: 🟡 Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.4.0
-          run_install: false
-
-      - name: ⚙️ Install packages & Build
-        run: |
-          pnpm install
-          pnpm build
+      - name: ⚙️ Build Package
+        run: bun run build
 
       - name: 🚀 Create Pull Request & Publish
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm publish -r
+          publish: bun changeset publish
           commit: '✅ chore: update version'
           title: '✅ chore: update version'
         env:
