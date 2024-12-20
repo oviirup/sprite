@@ -8,7 +8,8 @@ export function createSpriteFile({ icons, output, prefix = '' }: SpriteRecord, o
   const symbols = icons.map(({ name, content, attributes = {} }) => {
     const xml = parse('<symbol></symbol>');
     const symbol = xml.getElementsByTagName('symbol')[0];
-    symbol.setAttributes({ id: prefix.trim() + kebabCase(name), ...attributes });
+    const id = prefix.trim() + kebabCase(name);
+    symbol.setAttributes({ id, ...attributes });
     symbol.innerHTML = content;
     return `  ${symbol.toString()}`;
   });

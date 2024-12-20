@@ -6,9 +6,7 @@ export function getByteSize(content: string): number {
 export function kebabCase(str: string) {
   if (typeof str !== 'string') {
     throw new TypeError('expected a string');
-  }
-
-  if (/^(?:[-a-z\d]*)$/.test(str)) {
+  } else if (/^(?:[-a-z\d]*)$/.test(str)) {
     return str;
   }
 
@@ -22,4 +20,16 @@ export function kebabCase(str: string) {
     .replace(/^-+|-+$/g, '')
     .replace(/-{2,}/g, '-')
     .toLowerCase();
+}
+
+export function pascalCase(str: string) {
+  if (typeof str !== 'string') {
+    throw new TypeError('expected a string');
+  } else if (/^(?:[A-Z][a-zA-Z\d]*)$/.test(str)) {
+    return str;
+  }
+
+  return kebabCase(str.trim())
+    .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase())
+    .replace(/[\W_]+(.|$)/g, (_, chr) => chr.toUpperCase());
 }

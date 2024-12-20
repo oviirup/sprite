@@ -52,11 +52,16 @@ export const zSpriteRecord = z.object(
       .regex(/[a-zA-Z\d]*/, { message: 'invalid prefix' })
       .default('')
       .optional(),
-    /** Output file without extension, relative to cwd */
+    /** Output sprite file, relative to cwd */
     output: z
       .string({ message: 'invalid output' })
       .regex(/\.svg$/, { message: 'output file must end with .svg' })
       .min(1, { message: '"output" is required' }),
+    /** Output type definition file, relative to cwd */
+    types: z
+      .string()
+      .regex(/\.d\.ts$/, { message: 'output file must end with .d.ts' })
+      .optional(),
     /** Icon sets */
     icons: z
       .array(zIcon, { message: 'invalid icons' })

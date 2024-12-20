@@ -34,10 +34,10 @@
       "default": "./dist/lib/build.js",
       "import": "./dist/lib/build.mjs"
     },
-    "./lib/studio": {
-      "types": "./dist/lib/studio.d.ts",
-      "default": "./dist/lib/studio.js",
-      "import": "./dist/lib/studio.mjs"
+    "./lib/init": {
+      "types": "./dist/lib/init.d.ts",
+      "default": "./dist/lib/init.js",
+      "import": "./dist/lib/init.mjs"
     }
   },
   "files": [

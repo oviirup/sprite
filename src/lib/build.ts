@@ -2,6 +2,7 @@ import path from 'path';
 import { SpriteConfig } from '@/schema';
 import { resolveConfig, resolveRecords } from '@/utils/config';
 import { createSpriteFile } from '@/utils/createSpriteFile';
+import { createTypesFile } from '@/utils/createTypesFile';
 import { logger, SpriteError } from '@/utils/logger';
 import chokidar from 'chokidar';
 import pi from 'picocolors';
@@ -23,6 +24,11 @@ export function build(config: Partial<SpriteConfig> = {}) {
     for (const record of resolveRecords(cfg)) {
       const outputFilePath = path.resolve(cfg.cwd, record.output);
       createSpriteFile(record, outputFilePath);
+      // write types file
+      if (record.types) {
+        const typesFilePath = path.resolve(cfg.cwd, record.types);
+        createTypesFile(record, typesFilePath);
+      }
     }
   };
 
