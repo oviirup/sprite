@@ -51,12 +51,8 @@ And you are all ready to go. Now while you are building you can reference the fi
 You can also set the entry points in `package.json` <sup><a href='#sprite-base-config'>REF</a></sup> as follows...
 
 ```json
-// package.json
 {
-  "sprite": {
-    "cwd": "src",
-    "entries": ["icons.yaml"]
-  }
+  "sprite": ["icons.sprite.yaml"]
 }
 ```
 
@@ -67,7 +63,7 @@ Learn more about [configuration](#configuration).
 If you installed it use ...
 
 ```
-npm sprite build icons.yaml
+npm sprite build icons.sprite.yaml
 ```
 
 The CLI can pickup configuration from `package.json`, so you don't need to use any entry point in the CLI. Any entry point defined in the CLI will overwrite the config.

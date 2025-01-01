@@ -3,7 +3,7 @@ import path from 'path';
 import { SpriteRecord } from '@/schema';
 import { getPackageJson } from '@/utils/config';
 import { relativePath, writeFile } from '@/utils/files';
-import { SpriteError } from '@/utils/logger';
+import { logger, SpriteError } from '@/utils/logger';
 import yaml from 'yaml';
 
 export function initialize(root?: string) {
@@ -46,10 +46,10 @@ export function initialize(root?: string) {
     const yamlContent = yaml.stringify(blankRecord, { lineWidth: 0 });
     const done = writeFile(entryFilePath, yamlContent);
     if (done) {
-      pkgContent.sprite = {};
-      pkgContent.sprite.entries = entryFilePath_rel;
+      pkgContent.sprite = entryFilePath_rel;
       const updatedPkgContent = JSON.stringify(pkgContent, null, 2);
       writeFile(pkg.filePath, updatedPkgContent);
     }
+    logger.log(`created a new sprite project at ${entryFilePath_rel}`);
   } catch {}
 }

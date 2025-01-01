@@ -4,8 +4,10 @@ import { ResolvedConfig, SpriteConfig, SpriteRecord, zSpriteRecord } from '@/sch
 import fg from 'fast-glob';
 import yaml from 'yaml';
 import { z } from 'zod';
-import { readFile } from './files';
+import { readFile, relativePath } from './files';
 import { logger, SpriteError } from './logger';
+
+type SpriteEntries = SpriteConfig['entries'] | undefined;
 
 /** Resolves sprite config from input */
 export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
@@ -13,44 +15,37 @@ export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
   if (!pkg?.content) {
     throw new SpriteError('could not find nearest package.json');
   }
-  const cfg: Partial<SpriteConfig> = pkg.content['sprite'];
 
-  const zEntryString = z.string().min(1);
-  const zEntries = z
-    .union([zEntryString, z.array(zEntryString).min(1)])
-    .transform((val) => (typeof val === 'string' ? [val] : val));
-  const parsedEntries = zEntries.safeParse(config.entries);
+  const srcA = config.entries;
+  const srcB = pkg.content['sprite'];
 
-  cfg.cwd ??= config.cwd;
-  cfg.watch ??= config.watch;
-  if (parsedEntries.data?.length) {
-    cfg.entries = parsedEntries.data;
-  }
-
-  const cwd = cfg.cwd ? path.resolve(cfg.cwd) : process.cwd();
-  const watch = cfg.watch ?? false;
-  const entries = resolveEntries(cfg.entries, cwd);
+  const cwd = config.cwd ? path.resolve(config.cwd) : process.cwd();
+  const watch = config.watch ?? false;
+  const entries = resolveEntries(srcA, srcB, cwd);
 
   return { cwd, watch, entries };
 }
 
 /** Resolve sprite entries from glob patterns */
-export function resolveEntries(entries: SpriteConfig['entries'] | undefined, cwd: string) {
-  entries = Array.isArray(entries) ? entries : typeof entries === 'string' ? [entries.trim()] : [];
-  entries = entries.filter((e) => !!e.trim());
-  if (entries.length === 0) {
+export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: string) {
+  // parse entries with zod
+  const zEntryString = z.string({ message: 'must be a string' }).trim().min(1, 'no entry provided');
+  const zEntries = z
+    .union([zEntryString, z.array(zEntryString).min(1)])
+    .transform((val) => (Array.isArray(val) ? val : [val]));
+  const entries = zEntries.safeParse(srcA).data || zEntries.safeParse(srcB).data;
+  if (!entries?.length) {
     throw new SpriteError('no entries defined. Must use at least one entry');
   }
-
-  for (const entry of entries) {
+  // get all entries with fast-glob and filter
+  return fg.sync(entries, { cwd }).filter((entry) => {
     const { ext } = path.parse(entry);
-    if (!entry.startsWith('!') && !/\.ya?ml$/.test(ext)) {
-      logger.error('invalid entry: must end with ".yaml" or ".yml"');
-      throw new Error();
+    if (!/\.ya?ml$/.test(ext)) {
+      logger.error(`invalid entry: ${relativePath(cwd, entry)}`, 'entries must end with ".yaml" or ".yml"');
+      return false;
     }
-  }
-
-  return fg.sync(entries, { cwd });
+    return true;
+  });
 }
 
 /** Resolve records from entries */

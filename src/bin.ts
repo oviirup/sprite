@@ -26,8 +26,8 @@ SpriteCLI.command('build')
   .description('generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options] [entries...]')}`)
   .argument('[entries...]', 'specify the input paths')
+  .option('--cwd', 'specify working directory')
   .option('-w, --watch', 'enable watch mode, monitor the input directory')
-  .option('    --cwd', 'specify working directory')
   .action((args, opts) => {
     build({ entries: args, ...opts });
   });
