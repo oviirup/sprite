@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.2
+
+### Patch Changes
+
+- [`7ac1593`](https://github.com/oviirup/sprite/commit/7ac15935ac5c00a98b82b0a8918e6fb86c770d2a) Thanks [@oviirup](https://github.com/oviirup)! - 📦 updated dependencies
+
 ## 0.1.1
 
 ### Patch Changes
