@@ -6,8 +6,8 @@ import { logger } from './logger';
 
 export function createSpriteFile({ icons, output, prefix = '' }: SpriteRecord, outputFilePath: string) {
   const symbols = icons.map(({ name, content, attributes = {} }) => {
-    const xml = parse('<symbol></symbol>');
-    const symbol = xml.getElementsByTagName('symbol')[0];
+    const xml = parse('<symbol/>');
+    const symbol = xml.querySelector('symbol')!;
     const id = prefix.trim() + kebabCase(name);
     symbol.setAttributes({ id, ...attributes });
     symbol.innerHTML = content;
