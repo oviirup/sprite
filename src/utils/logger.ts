@@ -2,12 +2,12 @@ import pi from 'picocolors';
 import { ZodError } from 'zod';
 
 function customLogger(first: string | Function | null, ...rest: string[]) {
-  if (typeof first === 'function') {
-    return console.log(first('[SPRITE]'), ...rest);
-  } else if (first === null) {
-    return console.log('        ', ...rest);
-  }
-  return console.log('[SPRITE]', first, ...rest);
+  rest = rest.map((msg) => pi.dim(`         ${msg}`));
+  typeof first === 'function'
+    ? console.log(first('[SPRITE]'), ...rest)
+    : first === null
+      ? console.log(...rest)
+      : console.log('[SPRITE]', first, ...rest);
 }
 
 export const logger = {

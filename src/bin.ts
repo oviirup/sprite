@@ -37,7 +37,7 @@ SpriteCLI.parseAsync().catch(() => process.exit(1));
 // exit process on termination
 for (const signal of ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGKILL']) {
   process.on(signal, () => {
-    logger.log(pi.yellow, 'Exiting ...');
+    logger.warn('Exiting ...');
     process.stdout.write('\x1B[?25h');
     process.exit();
   });
