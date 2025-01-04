@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "displayName": "sprite",
   "description": "Create svg sprite sheet from SVG files, with ease",
   "repository": {
