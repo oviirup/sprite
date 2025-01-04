@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.3
+
+### Patch Changes
+
+- [`cc2b531`](https://github.com/oviirup/sprite/commit/cc2b531da23b614144a0ea51667741927bc14d2f) Thanks [@oviirup](https://github.com/oviirup)! - 🔧 updated package.json config pattern
+
 ## 0.1.2
 
 ### Patch Changes
