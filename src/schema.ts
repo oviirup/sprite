@@ -55,12 +55,12 @@ export const zSpriteRecord = z.object(
     /** Output sprite file, relative to cwd */
     output: z
       .string({ message: 'invalid output' })
-      .regex(/\.svg$/, { message: 'output file must end with .svg' })
+      .regex(/\.svg$/, { message: 'output file must end with .svg extension' })
       .min(1, { message: '"output" is required' }),
     /** Output type definition file, relative to cwd */
     types: z
-      .string()
-      .regex(/\.d\.ts$/, { message: 'output file must end with .d.ts' })
+      .string({ message: 'invalid types' })
+      .regex(/\.ts$/, { message: 'output file must end with .ts extension' })
       .optional(),
     /** Icon sets */
     icons: z

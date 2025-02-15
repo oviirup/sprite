@@ -5,7 +5,6 @@ import { createSpriteFile } from '@/utils/createSpriteFile';
 import { createTypesFile } from '@/utils/createTypesFile';
 import { logger, SpriteError } from '@/utils/logger';
 import chokidar from 'chokidar';
-import pi from 'picocolors';
 
 /**
  * Build sprite files from records

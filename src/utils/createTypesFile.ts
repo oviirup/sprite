@@ -1,4 +1,3 @@
-import { exec, execSync } from 'child_process';
 import { SpriteRecord } from '@/schema';
 import { writeFile } from './files';
 import { kebabCase, pascalCase } from './helpers';
