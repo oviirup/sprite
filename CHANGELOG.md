@@ -1,5 +1,15 @@
 # @oviirup/sprite
 
+## 0.1.4
+
+### Patch Changes
+
+- [`412caa9`](https://github.com/oviirup/sprite/commit/412caa926b196907e6d5d98bc3418fffbb71f162) Thanks [@oviirup](https://github.com/oviirup)! - 🏷️ allow .ts file for types
+
+  - 🏷️ Any file with .ts extension is allowed for types (previously .d.ts)
+  - 📦 updated packages
+  - ♻️ refactor logger
+
 ## 0.1.3
 
 ### Patch Changes
