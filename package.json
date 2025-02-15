@@ -27,15 +27,15 @@
       "import": "./dist/bin.mjs",
       "default": "./dist/bin.js"
     },
-    "./lib/build": {
-      "types": "./dist/lib/build.d.ts",
-      "import": "./dist/lib/build.mjs",
-      "default": "./dist/lib/build.js"
+    "./commands/build": {
+      "types": "./dist/commands/build.d.ts",
+      "import": "./dist/commands/build.mjs",
+      "default": "./dist/commands/build.js"
     },
-    "./lib/init": {
-      "types": "./dist/lib/init.d.ts",
-      "import": "./dist/lib/init.mjs",
-      "default": "./dist/lib/init.js"
+    "./commands/init": {
+      "types": "./dist/commands/init.d.ts",
+      "import": "./dist/commands/init.mjs",
+      "default": "./dist/commands/init.js"
     }
   },
   "files": [

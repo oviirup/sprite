@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { build } from '@/commands/build';
 import { PKG_DESC, PKG_NAME, PKG_VERSION } from '@/const';
-import { build } from '@/lib/build';
 import { logger } from '@/utils/logger';
 import { Command } from 'commander';
 import pi from 'picocolors';
-import { initialize } from './lib/init';
+import { initialize } from './commands/init';
 
 const SpriteCLI = new Command(PKG_NAME)
   .description(PKG_DESC)
