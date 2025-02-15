@@ -36,7 +36,7 @@ export function build(config: Partial<SpriteConfig> = {}) {
   if (cfg.watch) {
     logger.log('watching files');
     for (const entry of cfg.entries) {
-      logger.log(null, entry);
+      logger.log(entry);
     }
     const watcher = chokidar.watch(cfg.entries, {
       ignoreInitial: true,
