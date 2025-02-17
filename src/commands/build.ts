@@ -1,4 +1,4 @@
-import { SpriteConfig } from '@/schema';
+import { SpriteConfig } from '@/types';
 import { resolveConfig, resolveRecord } from '@/utils/config';
 import { createSpriteFiles } from '@/utils/createSpriteFiles';
 import { logger, SpriteError } from '@/utils/logger';

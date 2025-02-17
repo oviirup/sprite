@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { SpriteRecord } from '@/schema';
+import fs from 'node:fs';
+import path from 'node:path';
+import { SpriteRecord } from '@/types';
 import { getPackageJson } from '@/utils/config';
 import { relativePath, writeFile } from '@/utils/files';
 import { logger, SpriteError } from '@/utils/logger';

@@ -1,8 +1,10 @@
+import { PKG_NAME } from '@/const';
 import pi from 'picocolors';
-import { ZodError } from 'zod';
 
 function customLogger(first: string | Function, ...rest: string[]) {
-  return typeof first === 'function' ? console.log(first('sprite:'), ...rest) : console.log('sprite:', first, ...rest);
+  return typeof first === 'function'
+    ? console.log(first(`${PKG_NAME}:`), ...rest)
+    : console.log(`${PKG_NAME}:`, first, ...rest);
 }
 
 export const logger = {
@@ -11,11 +13,6 @@ export const logger = {
   success: (...msg: string[]) => customLogger(pi.green, ...msg),
   warn: (...msg: string[]) => customLogger(pi.yellow, ...msg),
   error: (...msg: string[]) => customLogger(pi.red, ...msg),
-  zodError: (errors: ZodError) => {
-    for (const err of errors.errors) {
-      customLogger(pi.red, err.message);
-    }
-  },
 };
 
 export class SpriteError extends Error {

@@ -1,6 +1,6 @@
 {
   "name": "@oviirup/sprite",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "displayName": "sprite",
   "description": "Create svg sprite sheet from SVG files, with ease",
   "repository": {
@@ -41,6 +41,11 @@
       "types": "./dist/lib/store.d.ts",
       "import": "./dist/lib/store.mjs",
       "default": "./dist/lib/store.js"
+    },
+    "./lib/schema": {
+      "types": "./dist/lib/schema.d.ts",
+      "import": "./dist/lib/schema.mjs",
+      "default": "./dist/lib/schema.js"
     }
   },
   "files": [
@@ -69,7 +74,7 @@
     "zod": "~3.24.2"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "~0.5.0",
+    "@changesets/changelog-github": "~0.5.1",
     "@changesets/cli": "~2.27.12",
     "@types/bun": "~1.2.2",
     "bunchee": "~6.3.4",

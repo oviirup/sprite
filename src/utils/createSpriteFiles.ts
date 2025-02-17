@@ -1,6 +1,6 @@
-import path from 'path';
+import path from 'node:path';
 import { SpriteStore } from '@/lib/store';
-import { SpriteRecord } from '@/schema';
+import { SpriteRecord } from '@/types';
 import pi from 'picocolors';
 import { writeFile } from './files';
 import { getByteSize } from './helpers';

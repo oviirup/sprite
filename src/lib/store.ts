@@ -1,8 +1,8 @@
-import type { Icon, SpriteRecord } from '@/schema';
-import { zIcon, zSpriteRecord } from '@/schema';
+import { Icon, SpriteRecord } from '@/types';
 import { kebabCase, pascalCase } from '@/utils/helpers';
 import { SpriteError } from '@/utils/logger';
 import parse from 'node-html-parser';
+import { zIcon, zSpriteRecord } from './schema';
 
 export class SpriteStore {
   readonly name: string;

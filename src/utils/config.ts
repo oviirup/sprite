@@ -1,6 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import { ResolvedConfig, SpriteConfig, zSpriteRecord } from '@/schema';
+import fs from 'node:fs';
+import path from 'node:path';
+import { zSpriteRecord } from '@/lib/schema';
+import { ResolvedConfig, SpriteConfig } from '@/types';
 import fg from 'fast-glob';
 import yaml from 'yaml';
 import { z } from 'zod';
