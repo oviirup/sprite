@@ -1,5 +1,15 @@
 # @oviirup/sprite
 
+## 0.1.5
+
+### Patch Changes
+
+- [#8](https://github.com/oviirup/sprite/pull/8) [`6361a3f`](https://github.com/oviirup/sprite/commit/6361a3fcfe8140fce659bb8d59690b55195af72c) Thanks [@oviirup](https://github.com/oviirup)! - ♻️ updated build command
+
+  - 🚚 relocated commands
+  - ✨ introduced sprite store
+  - 🗑️ remove dead codes
+
 ## 0.1.4
 
 ### Patch Changes
