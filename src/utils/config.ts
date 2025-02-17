@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { ResolvedConfig, SpriteConfig, SpriteRecord, zSpriteRecord } from '@/schema';
+import { ResolvedConfig, SpriteConfig, zSpriteRecord } from '@/schema';
 import fg from 'fast-glob';
 import yaml from 'yaml';
 import { z } from 'zod';
@@ -49,27 +49,18 @@ export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: st
 }
 
 /** Resolve records from entries */
-export function resolveRecords({ entries, cwd }: ResolvedConfig) {
-  const spriteRecords: SpriteRecord[] = [];
-  for (const entry of entries) {
-    const entryPath = path.resolve(cwd, entry);
-    try {
-      const rawYAML = readFile(entryPath);
-      if (!rawYAML) continue;
-      const rawRecord = yaml.parse(rawYAML);
-      const parsedRecord = zSpriteRecord.safeParse(rawRecord);
-      if (parsedRecord.error) {
-        logger.zodError(parsedRecord.error);
-        continue;
-      }
-      const record = parsedRecord.data;
-      spriteRecords.push(record);
-    } catch {
-      logger.error(`unable to parse record "${entry}"`);
-      continue;
-    }
+export function resolveRecord(entry: string, cwd: string) {
+  const entryPath = path.resolve(cwd, entry);
+  const rawYAML = readFile(entryPath);
+  if (!rawYAML) {
+    throw new SpriteError(`unable to parse record "${entry}"`);
   }
-  return spriteRecords;
+  const rawRecord = yaml.parse(rawYAML);
+  const parsedRecord = zSpriteRecord.safeParse(rawRecord);
+  if (parsedRecord.error) {
+    throw new SpriteError(parsedRecord.error.errors[0].message);
+  }
+  return parsedRecord.data;
 }
 
 /** Get the nearest package.json */

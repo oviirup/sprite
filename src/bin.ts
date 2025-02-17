@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { build } from '@/commands/build';
 import { PKG_DESC, PKG_NAME, PKG_VERSION } from '@/const';
-import { build } from '@/lib/build';
 import { logger } from '@/utils/logger';
 import { Command } from 'commander';
 import pi from 'picocolors';
-import { initialize } from './lib/init';
+import { initialize } from './commands/init';
 
 const SpriteCLI = new Command(PKG_NAME)
   .description(PKG_DESC)
@@ -37,7 +37,7 @@ SpriteCLI.parseAsync().catch(() => process.exit(1));
 // exit process on termination
 for (const signal of ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGKILL']) {
   process.on(signal, () => {
-    logger.warn('Exiting ...');
+    logger.warn('exiting ...');
     process.stdout.write('\x1B[?25h');
     process.exit();
   });
