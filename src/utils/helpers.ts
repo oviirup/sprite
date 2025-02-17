@@ -1,6 +1,12 @@
-export function getByteSize(content: string): number {
-  if (!content) return 0;
-  return Buffer.byteLength(content, 'utf-8');
+export function getByteSize(content: string): string {
+  let bytes = Buffer.byteLength(content || '', 'utf-8');
+  let index = 0;
+  const units = ['Bytes', 'KB', 'MB'];
+  while (bytes >= 1024 && index < units.length - 1) {
+    bytes /= 1024;
+    index++;
+  }
+  return `${bytes.toFixed(0)} ${units[index]}`;
 }
 
 export function kebabCase(str: string) {
