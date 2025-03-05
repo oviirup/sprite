@@ -16,9 +16,10 @@ const SpriteCLI = new Command(PKG_NAME)
 SpriteCLI.command('init')
   .description('generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options]')}`)
-  .option('--cwd', 'specify working directory')
-  .action((args, opts) => {
-    initialize(opts.cwd);
+  .option('--cwd <pathname>', 'specify working directory')
+  .option('--json', 'initialize with a json entry')
+  .action((opts) => {
+    initialize({ root: opts.cwd, useJSON: opts.json });
   });
 
 // define build command -->
@@ -26,7 +27,7 @@ SpriteCLI.command('build')
   .description('generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options] [entries...]')}`)
   .argument('[entries...]', 'specify the input paths')
-  .option('--cwd', 'specify working directory')
+  .option('--cwd <pathname>', 'specify working directory')
   .option('-w, --watch', 'enable watch mode, monitor the input directory')
   .action((args, opts) => {
     build({ entries: args, ...opts });

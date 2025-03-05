@@ -6,7 +6,14 @@ import { relativePath, writeFile } from '@/utils/files';
 import { logger, SpriteError } from '@/utils/logger';
 import yaml from 'yaml';
 
-export function initialize(root?: string) {
+type InitOptions = { root?: string; useJSON?: boolean };
+
+/**
+ * Initialize a new sprite project with default sprite entry
+ *
+ * @param opts - Sprite init options
+ */
+export function initialize({ root, useJSON = false }: InitOptions) {
   let cwd = root || process.cwd();
   const pkg = getPackageJson(cwd);
   const pkgContent = pkg?.content;
@@ -22,7 +29,7 @@ export function initialize(root?: string) {
     cwd = path.join(cwd, 'src');
   }
 
-  const entryFileName = 'icons.sprite.yaml';
+  const entryFileName = useJSON ? 'icons.sprite.json' : 'icons.sprite.yaml';
   const entryFilePath = path.join(cwd, entryFileName);
   const entryFilePath_rel = relativePath(root, entryFilePath);
 
@@ -36,15 +43,15 @@ export function initialize(root?: string) {
     icons: [
       {
         name: 'home',
-        content: `<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>`,
+        content: `<path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/><path d='M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>`,
         attributes: { 'viewBox': '0 0 24 24', 'stroke': 'currentColor', 'stroke-width': '2' },
       },
     ],
   };
 
   try {
-    const yamlContent = yaml.stringify(blankRecord, { lineWidth: 0 });
-    const done = writeFile(entryFilePath, yamlContent);
+    const content = useJSON ? JSON.stringify(blankRecord) : yaml.stringify(blankRecord, { lineWidth: 0 });
+    const done = writeFile(entryFilePath, content);
     if (done) {
       pkgContent.sprite = entryFilePath_rel;
       const updatedPkgContent = JSON.stringify(pkgContent, null, 2);
