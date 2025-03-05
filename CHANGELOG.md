@@ -1,5 +1,14 @@
 # @oviirup/sprite
 
+## 0.1.7
+
+### Patch Changes
+
+- [`26c34fd`](https://github.com/oviirup/sprite/commit/26c34fd0ce3e77ca90454a32e5b88a12db3e1593) Thanks [@oviirup](https://github.com/oviirup)! - 🔧 added support for json entries
+
+  - now `.json` files can be used to define a new sprite entry
+  - initialize a sprite project with json by `sprite init --json`
+
 ## 0.1.5
 
 ### Patch Changes
