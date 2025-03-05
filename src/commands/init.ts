@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { PKG_VERSION } from '@/const';
 import { SpriteRecord } from '@/types';
 import { getPackageJson } from '@/utils/config';
 import { relativePath, writeFile } from '@/utils/files';
@@ -37,7 +38,8 @@ export function initialize({ root, useJSON = false }: InitOptions) {
     throw new SpriteError(`file already exists: ${entryFilePath_rel}`);
   }
 
-  const blankRecord: SpriteRecord = {
+  const blankRecord: SpriteRecord & { $schema?: string } = {
+    $schema: useJSON ? `https://unpkg.com/@oviirup/sprite@${PKG_VERSION}/schema.json` : undefined,
     name: 'icons',
     output: 'public/icons.svg',
     icons: [
@@ -50,10 +52,10 @@ export function initialize({ root, useJSON = false }: InitOptions) {
   };
 
   try {
-    const content = useJSON ? JSON.stringify(blankRecord) : yaml.stringify(blankRecord, { lineWidth: 0 });
+    const content = useJSON ? JSON.stringify(blankRecord, null, 2) : yaml.stringify(blankRecord, { lineWidth: 0 });
     const done = writeFile(entryFilePath, content);
     if (done) {
-      pkgContent.sprite = entryFilePath_rel;
+      pkgContent.sprite = [entryFilePath_rel];
       const updatedPkgContent = JSON.stringify(pkgContent, null, 2);
       writeFile(pkg.filePath, updatedPkgContent);
     }

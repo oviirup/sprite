@@ -60,7 +60,6 @@ export function resolveRecord(entry: string, cwd: string) {
     rawRecord = yaml.parse(content);
   } else {
     rawRecord = json.parse(content);
-    console.log(rawRecord);
   }
   const parsedRecord = zSpriteRecord.safeParse(rawRecord);
   if (parsedRecord.error) {
