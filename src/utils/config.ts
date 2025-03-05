@@ -1,14 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { zSpriteRecord } from '@/lib/schema';
+import { zEntries, zSpriteRecord } from '@/lib/schema';
 import { ResolvedConfig, SpriteConfig } from '@/types';
 import fg from 'fast-glob';
+import json from 'tiny-jsonc';
 import yaml from 'yaml';
-import { z } from 'zod';
 import { readFile, relativePath } from './files';
 import { logger, SpriteError } from './logger';
 
 type SpriteEntries = SpriteConfig['entries'] | undefined;
+
+const allowedConfigExtension = ['.yaml', '.yml', '.json', '.jsonc', '.json5'];
 
 /** Resolves sprite config from input */
 export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
@@ -30,10 +32,6 @@ export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
 /** Resolve sprite entries from glob patterns */
 export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: string) {
   // parse entries with zod
-  const zEntryString = z.string({ message: 'must be a string' }).trim().min(1, 'no entry provided');
-  const zEntries = z
-    .union([zEntryString, z.array(zEntryString).min(1)])
-    .transform((val) => (Array.isArray(val) ? val : [val]));
   const entries = zEntries.safeParse(srcA).data || zEntries.safeParse(srcB).data;
   if (!entries?.length) {
     throw new SpriteError('no entries defined. Must use at least one entry');
@@ -41,8 +39,8 @@ export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: st
   // get all entries with fast-glob and filter
   return fg.sync(entries, { cwd }).filter((entry) => {
     const { ext } = path.parse(entry);
-    if (!/\.ya?ml$/.test(ext)) {
-      logger.error(`invalid entry: ${relativePath(cwd, entry)}`, 'entries must end with ".yaml" or ".yml"');
+    if (!allowedConfigExtension.includes(ext)) {
+      logger.error(`invalid entry: ${relativePath(cwd, entry)}`, 'entries must end with .yaml, .yml or .json');
       return false;
     }
     return true;
@@ -51,12 +49,19 @@ export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: st
 
 /** Resolve records from entries */
 export function resolveRecord(entry: string, cwd: string) {
-  const entryPath = path.resolve(cwd, entry);
-  const rawYAML = readFile(entryPath);
-  if (!rawYAML) {
+  const entryFilePath = path.resolve(cwd, entry);
+  const entryFileExt = path.parse(entry).ext;
+  const content = readFile(entryFilePath);
+  if (!content || !allowedConfigExtension.includes(entryFileExt)) {
     throw new SpriteError(`unable to parse record "${entry}"`);
   }
-  const rawRecord = yaml.parse(rawYAML);
+  let rawRecord = {};
+  if (/\.ya?ml/.test(entryFileExt)) {
+    rawRecord = yaml.parse(content);
+  } else {
+    rawRecord = json.parse(content);
+    console.log(rawRecord);
+  }
   const parsedRecord = zSpriteRecord.safeParse(rawRecord);
   if (parsedRecord.error) {
     throw new SpriteError(parsedRecord.error.errors[0].message);

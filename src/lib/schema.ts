@@ -55,3 +55,8 @@ export const zSpriteRecord = z.object(
   },
   { message: 'invalid sprite record' },
 );
+
+const zEntryString = z.string({ message: 'must be a string' }).trim();
+export const zEntries = z
+  .union([zEntryString, z.array(zEntryString).min(1)])
+  .transform((val) => (Array.isArray(val) ? val : [val]));
