@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.8
+
+### Patch Changes
+
+- [`d85e133`](https://github.com/oviirup/sprite/commit/d85e13379ea43c3639668941b8651dc5f2e15251) Thanks [@oviirup](https://github.com/oviirup)! - 🔍 added json schema
+
 ## 0.1.7
 
 ### Patch Changes
