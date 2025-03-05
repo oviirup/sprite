@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { SpriteError } from './logger';
 
 /**
  * Ensure the directory exists
@@ -42,7 +43,9 @@ export function writeFile(filePath: string, content: string) {
       fs.writeFileSync(filePath, content, 'utf-8');
       return true;
     }
-  } catch {}
+  } catch {
+    throw new SpriteError(`unable to write to file: ${filePath}`);
+  }
   return false;
 }
 

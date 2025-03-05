@@ -60,5 +60,7 @@ export function initialize({ root, useJSON = false }: InitOptions) {
       writeFile(pkg.filePath, updatedPkgContent);
     }
     logger.log(`created a new sprite project at ${entryFilePath_rel}`);
-  } catch {}
+  } catch {
+    throw new SpriteError('something went wrong');
+  }
 }
