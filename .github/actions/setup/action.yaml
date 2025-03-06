@@ -11,10 +11,8 @@ runs:
         key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
         restore-keys: |
           ${{ runner.os }}-bun-
-
     - name: 🟢 Setup Bun
       uses: oven-sh/setup-bun@v2
-
     - name: ⚙️ Install dependencies
       shell: bash
       run: bun install

@@ -9,13 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: 🟢 Setup CI environment
-        uses: ./.github/actions/setup
-
+      - uses: ./.github/actions/setup
       - name: ⚙️ Build Package
-        run: bun run build
-
+        run: |
+          bun run build
+          bun run build:schema
       - name: 🚀 Create Pull Request & Publish
         id: changesets
         uses: changesets/action@v1

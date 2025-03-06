@@ -1,6 +1,6 @@
 # Sprite ![](https://img.shields.io/badge/WIP-gold)
 
-![publish](https://github.com/oviirup/sprite/workflows/Publish/badge.svg)
+![publish](https://github.com/oviirup/sprite/workflows/CI/badge.svg)
 [![version](https://img.shields.io/npm/v/@oviirup/sprite)](https://www.npmjs.com/package/@oviirup/sprite)
 
 Simple tool to create SVG sprite sheet from SVG icons
