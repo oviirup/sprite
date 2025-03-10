@@ -30,10 +30,8 @@ export function build(config: Partial<SpriteConfig> = {}) {
       awaitWriteFinish: true,
     });
     watcher.on('change', (entry, stats) => {
-      if (stats?.isFile() && /\.ya?ml$/.test(entry)) {
-        const record = resolveRecord(entry, cfg.cwd);
-        createSpriteFiles(record, cfg.cwd, false);
-      }
+      const record = resolveRecord(entry, cfg.cwd);
+      createSpriteFiles(record, cfg.cwd, false);
     });
     watcher.on('unlink', () => {
       logger.error('entry file is removed');
