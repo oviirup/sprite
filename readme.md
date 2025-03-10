@@ -28,7 +28,7 @@ You can initiate a simple project with `init` command,
 npm sprite init
 ```
 
-You can also manually create a entry file with `.yaml` <sup><a href='#sprite-record-config'>REF</a></sup> as follows ...
+You can also manually create a entry file with `.yaml` or `.json` <sup><a href='#sprite-record-config'>REF</a></sup> as follows ...
 
 ```yaml
 # icons.yaml
@@ -44,6 +44,16 @@ icons:
       stroke-linecap: round
       stroke-linejoin: round
       stroke-width: 2
+```
+
+When using the json entry you can use the json schema <https://unpkg.com/@oviirup/sprite/schema.json> as follows
+
+```jsonc
+// icons.json
+{
+  "$schema": "https://unpkg.com/@oviirup/sprite/schema.json",
+  "name": "icon",
+}
 ```
 
 And you are all ready to go. Now while you are building you can reference the file.
