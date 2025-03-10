@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.9
+
+### Patch Changes
+
+- [`6d8dcaf`](https://github.com/oviirup/sprite/commit/6d8dcaf1330a9c1ab8d1230a7f0edbaeb3569795) Thanks [@oviirup](https://github.com/oviirup)! - 🐛 fixed watch mode
+
 ## 0.1.8
 
 ### Patch Changes
