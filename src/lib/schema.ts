@@ -2,13 +2,14 @@ import { z } from 'zod';
 
 export const zString = (params?: z.RawCreateParams) => z.coerce.string(params).trim();
 
+/** Name of the icon, (in lowercase) */
+export const zIconName = zString({ message: 'invalid name' })
+  .regex(/^(?:[-a-z\d]*)$/, { message: 'invalid name, must be a kabab-case string' })
+  .min(1, { message: '"name" is required' })
+  .describe('Name of the icon, (should be in lowercase)');
+
 export const zIcon = z.object(
   {
-    /** Name of the icon, (in lowercase) */
-    name: zString({ message: 'invalid name' })
-      .regex(/^(?:[-a-z\d]*)$/, { message: 'invalid name, must be a kabab-case string' })
-      .min(1, { message: '"name" is required' })
-      .describe('Name of the icon, (should be in lowercase)'),
     /** Inner content of the svg icon */
     content: zString({ message: 'invalid content' })
       .min(1, { message: '"content" must not be empty' })
@@ -29,6 +30,27 @@ export const zIcon = z.object(
   { message: 'invalid icon data' },
 );
 
+export const zRawIconValue = z.union([zIcon, zString()]).transform((value) => {
+  return typeof value === 'string' ? { content: value } : value;
+});
+
+export const zIconRecord = z
+  .record(zIconName, zRawIconValue, { message: 'invalid icons' })
+  .superRefine((value, ctx) => {
+    const icons = Object.keys(value);
+    const iconNamesSet = new Set<string>();
+    // check if all the icons names are unique
+    for (const iconName of icons) {
+      if (!iconNamesSet.has(iconName)) {
+        iconNamesSet.add(iconName);
+        continue;
+      }
+      ctx.addIssue({ code: 'custom', path: ctx.path, message: `icon name "${iconName}" is not unique` });
+      break;
+    }
+  })
+  .describe('Icon record');
+
 export const zSpriteRecord = z.object(
   {
     /** Name of the sprite project */
@@ -46,29 +68,8 @@ export const zSpriteRecord = z.object(
       .regex(/\.svg$/, { message: 'output file must end with .svg extension' })
       .min(1, { message: '"output" is required' })
       .describe('Output path of sprite file, relative to cwd'),
-    /** Output type definition file, relative to cwd */
-    types: zString({ message: 'invalid types' })
-      .regex(/\.ts$/, { message: 'output file must end with .ts extension' })
-      .optional()
-      .describe('Output path of type definition file, relative to cwd'),
     /** Icon sets */
-    icons: z
-      .array(zIcon, { message: 'invalid icons' })
-      .default([])
-      .superRefine((icons, ctx) => {
-        const names = new Set();
-        for (let i = 0; i < icons.length; i++) {
-          const icon = icons[i];
-          if (names.has(icon.name)) {
-            // Add an error for the current icon index
-            const issuePath = [i, 'name'];
-            ctx.addIssue({ code: 'custom', path: issuePath, message: `icon name "${icon.name}" is not unique` });
-            break;
-          }
-          names.add(icon.name);
-        }
-      })
-      .describe('Icon sets'),
+    icons: zIconRecord,
   },
   { message: 'invalid sprite record' },
 );

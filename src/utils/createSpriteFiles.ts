@@ -8,7 +8,6 @@ import { logger } from './logger';
 
 export function createSpriteFiles(record: SpriteRecord, cwd: string, initial = false) {
   const store = new SpriteStore(record);
-
   // generate sprite file
   try {
     const spriteFilePath = path.resolve(cwd, record.output);
@@ -23,15 +22,5 @@ export function createSpriteFiles(record: SpriteRecord, cwd: string, initial = f
     }
   } catch {
     logger.error('unable to write sprite file');
-  }
-
-  // generate types file
-  if (record.types) {
-    try {
-      const typesFilePath = path.resolve(cwd, record.types);
-      writeFile(typesFilePath, store.toTypedef());
-    } catch {
-      logger.error('unable to write types file');
-    }
   }
 }

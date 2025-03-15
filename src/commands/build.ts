@@ -29,7 +29,7 @@ export function build(config: Partial<SpriteConfig> = {}) {
       cwd: cfg.cwd,
       awaitWriteFinish: true,
     });
-    watcher.on('change', (entry, stats) => {
+    watcher.on('change', (entry) => {
       const record = resolveRecord(entry, cfg.cwd);
       createSpriteFiles(record, cfg.cwd, false);
     });

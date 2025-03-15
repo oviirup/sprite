@@ -21,4 +21,6 @@ export type ResolvedConfig = {
 
 export type Icon = z.infer<typeof zIcon>;
 
+export type IconRecord = Record<string, Icon>;
+
 export type SpriteRecord = z.infer<typeof zSpriteRecord>;
