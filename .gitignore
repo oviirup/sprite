@@ -1,6 +1,7 @@
 node_modules
 dist
 *-v*.*.*.tgz
+schema.json
 
 # debug
 *-debug.log*

@@ -17,13 +17,13 @@ SpriteCLI.command('init')
   .description('generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options]')}`)
   .option('--cwd <pathname>', 'specify working directory')
-  .option('--json', 'initialize with a json entry')
+  .option('--yaml', 'initialize with a yaml entry')
   .action((opts) => {
-    initialize({ root: opts.cwd, useJSON: opts.json });
+    initialize({ root: opts.cwd, useYAML: opts.yaml });
   });
 
 // define build command -->
-SpriteCLI.command('build')
+SpriteCLI.command('build', { isDefault: true })
   .description('generate optimized svg sprite sheet')
   .usage(`${pi.dim('[options] [entries...]')}`)
   .argument('[entries...]', 'specify the input paths')
