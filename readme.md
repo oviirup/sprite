@@ -30,29 +30,36 @@ npm sprite init
 
 You can also manually create a entry file with `.yaml` or `.json` <sup><a href='#sprite-record-config'>REF</a></sup> as follows ...
 
-```yaml
-# icons.yaml
-name: lucide-icons
-output: icons.sprite.svg
-icons:
-  - name: 'home',
-    content: <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>,
-    attributes:
-      viewBox: 0 0 24 24
-      fill: none
-      stroke: currentcolor
-      stroke-linecap: round
-      stroke-linejoin: round
-      stroke-width: 2
+```json
+{
+  "$schema": "https://unpkg.com/@oviirup/sprite/schema.json",
+  "name": "lucide-icons",
+  "output": "icons.sprite.svg",
+  "icons": {
+    "home": {
+      "content": "<path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8'/><path d='M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/>",
+      "attributes": {
+        "viewBox": "0 0 24 24",
+        "fill": "none",
+        "stroke": "currentcolor",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "stroke-width": "2"
+      }
+    }
+  }
+}
 ```
+
+If you want you could also initiate a project with a `.yaml` file with `--yaml` flag.
 
 When using the json entry you can use the json schema <https://unpkg.com/@oviirup/sprite/schema.json> as follows
 
-```jsonc
+```json
 // icons.json
 {
   "$schema": "https://unpkg.com/@oviirup/sprite/schema.json",
-  "name": "icon",
+  "name": "icon"
 }
 ```
 
@@ -109,19 +116,29 @@ You can define the root configuration in `package.json` with an object of `sprit
   Output file without extension, relative to cwd
 - prefix: `String`\
   Prefix for icon names, with no empty space
-- icons: `Icon[]` \*\
+- icons: `Record<string,Icon>` \*\
   Icon sets configuration
 
 ### Icon config
 
-- name: `String` \*\
-  Name of the icon, (should be in lowercase)
 - content: `String` \*\
   Inner content of the svg icon
-- attributes: `Record<string, string>`\
+- attributes: `Record<string,string>`\
   SVG attributes
 - tags: `String[]`\
   Tags for the icon for search
+
+### TypeSafe Icon names
+
+The icon names can be typesafe with a simple trick of typescript.
+
+```ts
+import type Sprite from './icons.sprite.json';
+
+type IconNames = keyof (typeof IconsSprite)['icons'];
+```
+
+> NOTE: This can only be achieved using `.json` entry.
 
 ## Contributing & Development
 
