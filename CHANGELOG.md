@@ -1,5 +1,16 @@
 # @oviirup/sprite
 
+## 0.1.10
+
+### Patch Changes
+
+- [#18](https://github.com/oviirup/sprite/pull/18) [`d4ad62f`](https://github.com/oviirup/sprite/commit/d4ad62fbfee37c63adfcd1598c4a83806cc4fb34) Thanks [@oviirup](https://github.com/oviirup)! - 🛠️ updated sprite config
+
+  - 🔧 updated config schema for sprite entry. [learn more](https://github.com/oviirup/sprite?tab=readme-ov-file#configuration)
+  - ✅ `sprite build` is set as the default command.
+  - 🚫 removed support for `.jsonc`, `.json5`
+  - 🏷️ removed types generation. [learn more](https://github.com/oviirup/sprite?tab=readme-ov-file#usage)
+
 ## 0.1.9
 
 ### Patch Changes
