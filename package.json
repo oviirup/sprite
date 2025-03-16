@@ -75,7 +75,6 @@
     "fast-glob": "~3.3.3",
     "node-html-parser": "~7.0.1",
     "picocolors": "~1.1.1",
-    "tiny-jsonc": "~1.0.2",
     "yaml": "~2.7.0",
     "zod": "~3.24.2"
   },

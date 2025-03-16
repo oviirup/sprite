@@ -3,14 +3,13 @@ import path from 'node:path';
 import { zEntries, zSpriteRecord } from '@/lib/schema';
 import { ResolvedConfig, SpriteConfig } from '@/types';
 import fg from 'fast-glob';
-import json from 'tiny-jsonc';
-import yaml from 'yaml';
+import YAML from 'yaml';
 import { readFile, relativePath } from './files';
 import { logger, SpriteError } from './logger';
 
 type SpriteEntries = SpriteConfig['entries'] | undefined;
 
-const allowedConfigExtension = ['.yaml', '.yml', '.json', '.jsonc', '.json5'];
+const allowedConfigExtension = ['.yaml', '.yml', '.json'];
 
 /** Resolves sprite config from input */
 export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
@@ -56,10 +55,10 @@ export function resolveRecord(entry: string, cwd: string) {
     throw new SpriteError(`unable to parse record "${entry}"`);
   }
   let rawRecord = {};
-  if (/\.ya?ml/.test(entryFileExt)) {
-    rawRecord = yaml.parse(content);
-  } else {
-    rawRecord = json.parse(content);
+  try {
+    rawRecord = /\.ya?ml/.test(entryFileExt) ? YAML.parse(content) : JSON.parse(content);
+  } catch {
+    throw new SpriteError(`unable to parse entry "${relativePath(cwd, entry)}"`);
   }
   const parsedRecord = zSpriteRecord.safeParse(rawRecord);
   if (parsedRecord.error) {
