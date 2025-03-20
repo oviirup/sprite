@@ -6,7 +6,7 @@ import { writeFile } from './files';
 import { getByteSize } from './helpers';
 import { logger } from './logger';
 
-export function createSpriteFiles(record: SpriteRecord, cwd: string, initial = false) {
+export function createSpriteFiles(record: SpriteRecord, cwd: string) {
   const store = new SpriteStore(record);
   // generate sprite file
   try {
@@ -15,10 +15,9 @@ export function createSpriteFiles(record: SpriteRecord, cwd: string, initial = f
     const result = writeFile(spriteFilePath, store.toSprite());
     const size = getByteSize(content);
     if (result) {
-      const state = initial ? 'created' : 'updated';
-      logger.success(`${state} ${record.output} ${pi.dim(size)}`);
+      logger.success(`${record.output} ${pi.dim(size)}`);
     } else {
-      logger.log(pi.dim('already up to date'));
+      logger.log(`${record.output} ${pi.dim('no change')}`);
     }
   } catch {
     logger.error('unable to write sprite file');

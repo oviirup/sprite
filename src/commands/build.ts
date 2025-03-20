@@ -19,7 +19,7 @@ export function build(config: Partial<SpriteConfig> = {}) {
 
   for (const entry of cfg.entries) {
     const record = resolveRecord(entry, cfg.cwd);
-    createSpriteFiles(record, cfg.cwd, true);
+    createSpriteFiles(record, cfg.cwd);
   }
 
   if (cfg.watch) {
@@ -31,11 +31,14 @@ export function build(config: Partial<SpriteConfig> = {}) {
     });
     watcher.on('change', (entry) => {
       const record = resolveRecord(entry, cfg.cwd);
-      createSpriteFiles(record, cfg.cwd, false);
+      createSpriteFiles(record, cfg.cwd);
     });
     watcher.on('unlink', () => {
       logger.error('entry file is removed');
       watcher.close();
     });
+    // expose watcher for use externally
+    return watcher;
   }
+  return null;
 }
