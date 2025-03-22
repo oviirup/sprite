@@ -30,7 +30,7 @@ export function initialize({ root, useYAML = false }: InitOptions) {
     cwd = path.join(cwd, 'src');
   }
 
-  const entryFileName = useYAML ? 'icons.sprite.json' : 'icons.sprite.yaml';
+  const entryFileName = useYAML ? 'icons.sprite.yaml' : 'icons.sprite.json';
   const entryFilePath = path.join(cwd, entryFileName);
   const entryFilePath_rel = relativePath(root, entryFilePath);
 
