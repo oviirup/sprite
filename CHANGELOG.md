@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.11
+
+### Patch Changes
+
+- [`ac02d96`](https://github.com/oviirup/sprite/commit/ac02d961aee10bbc3daf7d887e47e59e7669669f) Thanks [@oviirup](https://github.com/oviirup)! - 🐛 fixed improper file extension in init command
+
 ## 0.1.10
 
 ### Patch Changes
