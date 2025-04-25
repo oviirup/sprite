@@ -1,5 +1,14 @@
 # @oviirup/sprite
 
+## 0.1.12
+
+### Patch Changes
+
+- [`ef45b71`](https://github.com/oviirup/sprite/commit/ef45b71bba29cab056a35d2c9cc8440cc779cf81) Thanks [@oviirup](https://github.com/oviirup)! - 🐛 fix improper import
+
+  - 🐛 fixed improper import of `parse` from `node-html-parser`
+  - 📦 updated dependencies
+
 ## 0.1.11
 
 ### Patch Changes
