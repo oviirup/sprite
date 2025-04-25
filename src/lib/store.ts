@@ -1,7 +1,7 @@
 import { Icon, IconRecord, SpriteRecord } from '@/types';
 import { kebabCase } from '@/utils/helpers';
 import { SpriteError } from '@/utils/logger';
-import parse from 'node-html-parser';
+import { parse } from 'node-html-parser';
 import { zIcon, zSpriteRecord } from './schema';
 
 export class SpriteStore {
