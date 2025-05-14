@@ -1,5 +1,4 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
 # After checking out a branch (or after cloning the repo),
 # ensure all Git submodules are initialized and updated.
