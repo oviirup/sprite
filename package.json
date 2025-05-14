@@ -64,9 +64,9 @@
     "build:schema": "bun scripts/schema",
     "clean": "npx rimraf node_modules dist",
     "dev": "bunchee -w",
-    "format": "prettier -w -u --cache .",
-    "format:check": "prettier --check -u .",
-    "lint": "eslint src --ext .ts",
+    "format": "prettier -wu . --cache",
+    "format:check": "prettier -cu .",
+    "lint": "eslint src/**/*.ts",
     "types:check": "tsc --noEmit"
   },
   "dependencies": {
@@ -76,23 +76,23 @@
     "node-html-parser": "~7.0.1",
     "picocolors": "~1.1.1",
     "yaml": "~2.7.1",
-    "zod": "~3.24.3"
+    "zod": "~3.24.4"
   },
   "devDependencies": {
     "@changesets/changelog-github": "~0.5.1",
-    "@changesets/cli": "~2.29.2",
-    "@eslint/js": "~9.25.1",
-    "@types/bun": "~1.2.10",
+    "@changesets/cli": "~2.29.4",
+    "@eslint/js": "~9.26.0",
+    "@types/bun": "~1.2.13",
     "bunchee": "~6.5.1",
-    "eslint": "~9.25.1",
-    "eslint-config-prettier": "~10.1.2",
+    "eslint": "~9.26.0",
+    "eslint-config-prettier": "~10.1.5",
     "eslint-plugin-only-warn": "~1.1.0",
     "prettier": "~3.5.3",
     "prettier-plugin-imports": "~4.3.3",
     "prettier-plugin-jsdoc": "~1.3.2",
-    "prettier-plugin-pkg": "~0.19.0",
+    "prettier-plugin-pkg": "~0.19.1",
     "typescript": "~5.8.3",
-    "typescript-eslint": "~8.31.0",
+    "typescript-eslint": "~8.32.1",
     "zod-to-json-schema": "~3.24.5"
   },
   "publishConfig": {
