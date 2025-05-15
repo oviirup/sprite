@@ -1,6 +1,7 @@
 *.min.js
 *.min.ts
 schema.json
+.husky/*
 
 # package lock files
 pnpm-lock.yaml
