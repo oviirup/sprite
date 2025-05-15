@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { zEntries, zSpriteRecord } from '@/lib/schema';
 import { ResolvedConfig, SpriteConfig } from '@/types';
-import fg from 'fast-glob';
+import { globSync } from 'tinyglobby';
 import YAML from 'yaml';
 import { readFile, relativePath } from './files';
 import { logger, SpriteError } from './logger';
@@ -29,17 +29,25 @@ export function resolveConfig(config: Partial<SpriteConfig>): ResolvedConfig {
 }
 
 /** Resolve sprite entries from glob patterns */
-export function resolveEntries(srcA: SpriteEntries, srcB: SpriteEntries, cwd: string) {
+export function resolveEntries(
+  srcA: SpriteEntries,
+  srcB: SpriteEntries,
+  cwd: string,
+) {
   // parse entries with zod
-  const entries = zEntries.safeParse(srcA).data || zEntries.safeParse(srcB).data;
+  const entries =
+    zEntries.safeParse(srcA).data || zEntries.safeParse(srcB).data;
   if (!entries?.length) {
     throw new SpriteError('no entries defined. Must use at least one entry');
   }
   // get all entries with fast-glob and filter
-  return fg.sync(entries, { cwd }).filter((entry) => {
+  return globSync(entries, { cwd }).filter((entry) => {
     const { ext } = path.parse(entry);
     if (!allowedConfigExtension.includes(ext)) {
-      logger.error(`invalid entry: ${relativePath(cwd, entry)}`, 'entries must end with .yaml, .yml or .json');
+      logger.error(
+        `invalid entry: ${relativePath(cwd, entry)}`,
+        'entries must end with .yaml, .yml or .json',
+      );
       return false;
     }
     return true;
@@ -56,9 +64,13 @@ export function resolveRecord(entry: string, cwd: string) {
   }
   let rawRecord = {};
   try {
-    rawRecord = /\.ya?ml/.test(entryFileExt) ? YAML.parse(content) : JSON.parse(content);
+    rawRecord = /\.ya?ml/.test(entryFileExt)
+      ? YAML.parse(content)
+      : JSON.parse(content);
   } catch {
-    throw new SpriteError(`unable to parse entry "${relativePath(cwd, entry)}"`);
+    throw new SpriteError(
+      `unable to parse entry "${relativePath(cwd, entry)}"`,
+    );
   }
   const parsedRecord = zSpriteRecord.safeParse(rawRecord);
   if (parsedRecord.error) {

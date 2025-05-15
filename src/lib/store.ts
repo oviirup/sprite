@@ -15,7 +15,8 @@ export class SpriteStore {
   constructor(record: SpriteRecord) {
     const parsedRecord = zSpriteRecord.safeParse(record);
     if (!parsedRecord.success) {
-      throw new SpriteError(parsedRecord.error.errors.map((e) => e.message).join(', '));
+      const errors = parsedRecord.error.errors.map((err) => err.message);
+      throw new SpriteError(errors.join(', '));
     }
     this.name = record.name;
     this.prefix = record.prefix?.trim() || '';

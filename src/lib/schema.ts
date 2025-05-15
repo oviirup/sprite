@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
-export const zString = (params?: z.RawCreateParams) => z.coerce.string(params).trim();
+export const zString = (params?: z.RawCreateParams) =>
+  z.coerce.string(params).trim();
 
 /** Name of the icon, (in lowercase) */
 export const zIconName = zString({ message: 'invalid name' })
-  .regex(/^(?:[-a-z\d]*)$/, { message: 'invalid name, must be a kabab-case string' })
+  .regex(/^(?:[-a-z\d]*)$/, { message: 'invalid name, must be kebab-case' })
   .min(1, { message: '"name" is required' })
   .describe('Name of the icon, (should be in lowercase)');
 
@@ -45,7 +46,11 @@ export const zIconRecord = z
         iconNamesSet.add(iconName);
         continue;
       }
-      ctx.addIssue({ code: 'custom', path: ctx.path, message: `icon name "${iconName}" is not unique` });
+      ctx.addIssue({
+        code: 'custom',
+        path: ctx.path,
+        message: `icon name "${iconName}" is not unique`,
+      });
       break;
     }
   })

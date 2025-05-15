@@ -39,7 +39,9 @@ export function initialize({ root, useYAML = false }: InitOptions) {
   }
 
   const blankRecord: SpriteRecord & { $schema?: string } = {
-    $schema: useYAML ? undefined : `https://unpkg.com/@oviirup/sprite@${PKG_VERSION}/schema.json`,
+    $schema: useYAML
+      ? undefined
+      : `https://unpkg.com/@oviirup/sprite@${PKG_VERSION}/schema.json`,
     name: 'icons',
     output: 'public/icons.svg',
     icons: {
@@ -55,7 +57,9 @@ export function initialize({ root, useYAML = false }: InitOptions) {
   };
 
   try {
-    const content = useYAML ? yaml.stringify(blankRecord, { lineWidth: 0 }) : JSON.stringify(blankRecord, null, 2);
+    const content = useYAML
+      ? yaml.stringify(blankRecord, { lineWidth: 0 })
+      : JSON.stringify(blankRecord, null, 2);
     const done = writeFile(entryFilePath, content);
     if (done) {
       pkgContent.sprite = [entryFilePath_rel];
