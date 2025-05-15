@@ -8,7 +8,10 @@ import { SpriteError } from './logger';
  * @param targetPath - Path to directory
  * @param isFilePath - Specify if the given target path is a file
  */
-export function ensureDirectory(targetPath: string, isFilePath: boolean = false) {
+export function ensureDirectory(
+  targetPath: string,
+  isFilePath: boolean = false,
+) {
   targetPath = isFilePath ? path.dirname(targetPath) : targetPath;
   if (!fs.existsSync(targetPath)) {
     fs.mkdirSync(targetPath, { recursive: true });
