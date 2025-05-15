@@ -1,5 +1,11 @@
 # @oviirup/sprite
 
+## 0.1.13
+
+### Patch Changes
+
+- [#22](https://github.com/oviirup/sprite/pull/22) [`300deea`](https://github.com/oviirup/sprite/commit/300deeaccc4c193e0343625f6d38909123f41f05) Thanks [@oviirup](https://github.com/oviirup)! - 📦 using `tinyglobby` instead of `fast-glob`
+
 ## 0.1.12
 
 ### Patch Changes
