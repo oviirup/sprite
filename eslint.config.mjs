@@ -1,32 +1,27 @@
-const js = require('@eslint/js');
-const prettier = require('eslint-config-prettier');
-const onlyWarn = require('eslint-plugin-only-warn');
-const tseslint = require('typescript-eslint');
+import eslint from '@eslint/js';
+import prettier from 'eslint-config-prettier';
+import onlyWarn from 'eslint-plugin-only-warn';
+import tslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config} */
-module.exports = [
-  js.configs.recommended,
+export default [
+  eslint.configs.recommended,
   prettier,
-  ...tseslint.configs.recommended,
+  ...tslint.configs.recommended,
   {
+    plugins: { onlyWarn },
     rules: {
+      // disable some strict typescript rules
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
-    },
-  },
-  {
-    plugins: { onlyWarn },
-    rules: {
+      // custom rules
       'semi': 'warn',
       'prefer-arrow-callback': 'warn',
       'prefer-template': 'warn',
       'eqeqeq': 'warn',
     },
-  },
-  {
-    ignores: ['eslint.config.js', 'dist/**'],
   },
 ];
