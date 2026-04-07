@@ -62,29 +62,22 @@
   ],
   "scripts": {
     "build": "bunchee -m --no-sourcemap",
-    "build:schema": "bun scripts/schema",
-    "clean": "npx rimraf node_modules dist",
     "dev": "bunchee -w",
     "format": "biome format --write",
     "lint": "biome check",
+    "test": "bun test",
     "prepare": "lefthook install"
   },
   "dependencies": {
-    "chokidar": "~4.0.3",
-    "commander": "~14.0.0",
-    "node-html-parser": "~7.0.1",
-    "picocolors": "~1.1.1",
-    "tinyglobby": "~0.2.14",
-    "yaml": "~2.8.0",
-    "zod": "~3.25.67"
+    "@oviirup/utils": "^1.0.9",
+    "commander": "^14.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.8",
-    "@changesets/changelog-github": "~0.5.1",
-    "@changesets/cli": "~2.29.4",
-    "@types/bun": "~1.2.16",
-    "bunchee": "~6.5.3",
-    "lefthook": "^2.1.4",
-    "typescript": "~5.8.3"
+    "@biomejs/biome": "^2.4.10",
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
+    "@types/bun": "^1.3.11",
+    "lefthook": "^2.1.5",
+    "typescript": "^6.0.2"
   }
 }
