@@ -1,5 +1,3 @@
-.changeset
-.github
-.husky
-src
-!dist
+# ignore all files except dist folder
+**/*
+!dist/**/*

@@ -65,9 +65,8 @@
     "build:schema": "bun scripts/schema",
     "clean": "npx rimraf node_modules dist",
     "dev": "bunchee -w",
-    "format": "prettier -wu . --cache",
-    "format:check": "prettier -cu .",
-    "lint": "eslint src/**/*.ts",
+    "format": "biome format --write",
+    "lint": "biome check",
     "prepare": "husky",
     "types:check": "tsc --noEmit"
   },
@@ -81,22 +80,14 @@
     "zod": "~3.25.67"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.8",
     "@changesets/changelog-github": "~0.5.1",
     "@changesets/cli": "~2.29.4",
-    "@eslint/js": "~9.29.0",
     "@types/bun": "~1.2.16",
     "bunchee": "~6.5.3",
-    "eslint": "~9.29.0",
-    "eslint-config-prettier": "~10.1.5",
-    "eslint-plugin-only-warn": "~1.1.0",
     "husky": "~9.1.7",
     "lint-staged": "~16.1.2",
-    "prettier": "~3.5.3",
-    "prettier-plugin-imports": "~4.3.3",
-    "prettier-plugin-jsdoc": "~1.3.2",
-    "prettier-plugin-pkg": "~0.21.1",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "~8.34.1"
+    "typescript": "~5.8.3"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
