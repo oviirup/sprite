@@ -67,8 +67,7 @@
     "dev": "bunchee -w",
     "format": "biome format --write",
     "lint": "biome check",
-    "prepare": "husky",
-    "types:check": "tsc --noEmit"
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "chokidar": "~4.0.3",
@@ -85,21 +84,7 @@
     "@changesets/cli": "~2.29.4",
     "@types/bun": "~1.2.16",
     "bunchee": "~6.5.3",
-    "husky": "~9.1.7",
-    "lint-staged": "~16.1.2",
+    "lefthook": "^2.1.4",
     "typescript": "~5.8.3"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "lint-staged": {
-    "*.{js,mjs,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{css,json,md,mdx,yaml,gql,xml,svg}": [
-      "prettier --write"
-    ]
   }
 }

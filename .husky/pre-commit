@@ -1,2 +1,0 @@
-# Run lint-staged to automatically lint files before committing.
-bun run lint-staged
